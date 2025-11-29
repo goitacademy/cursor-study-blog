@@ -1,0 +1,105 @@
+.auth-layout {
+  min-height: 100vh;
+}
+
+.auth-header {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: auto;
+  line-height: normal;
+  background: var(--ant-color-bg-elevated);
+  border-bottom: var(--ant-line-width) solid var(--ant-color-split);
+  padding: 0 var(--ant-padding);
+}
+
+.auth-header-logo {
+  cursor: pointer;
+  padding: var(--ant-padding-sm) 0;
+}
+
+.auth-header-logo-img {
+  width: 32px;
+  height: 32px;
+}
+
+.auth-header-logo-title {
+  margin: 0;
+}
+
+.auth-content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  padding: 48px var(--ant-padding-lg);
+  background: linear-gradient(135deg, var(--ant-color-primary-bg) 0%, var(--ant-color-bg-base) 100%);
+  min-height: calc(100vh - 73px - 70px);
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 400px;
+  background: var(--ant-color-bg-container);
+  border-radius: 24px;
+  padding: var(--ant-padding);
+  box-shadow: var(--ant-box-shadow);
+}
+
+.auth-card-title {
+  text-align: center;
+  margin: 0;
+}
+
+.auth-form-item {
+  margin-bottom: var(--ant-margin);
+}
+
+.auth-form-item-small {
+  margin-bottom: var(--ant-margin-xs);
+}
+
+.auth-forgot-password {
+  margin-bottom: var(--ant-margin);
+}
+
+.auth-forgot-password-text {
+  font-size: var(--ant-font-size-sm);
+}
+
+.auth-link-warning {
+  color: var(--ant-color-warning);
+}
+
+.auth-input-icon {
+  color: var(--ant-color-text-placeholder);
+}
+
+.auth-footer {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--ant-color-primary-bg);
+  border-top: var(--ant-line-width) solid var(--ant-color-primary-border);
+  padding: var(--ant-margin) var(--ant-padding);
+}
+
+.auth-footer-logo {
+  cursor: pointer;
+}
+
+.auth-footer-logo-img {
+  width: 32px;
+  height: 32px;
+}
+
+.auth-footer-logo-title {
+  margin: 0;
+}

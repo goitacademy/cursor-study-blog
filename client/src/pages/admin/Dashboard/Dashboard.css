@@ -1,0 +1,125 @@
+.admin-dashboard {
+  flex: 1;
+  min-height: 0;
+  padding: var(--ant-padding-lg);
+  background: var(--ant-color-bg-container);
+}
+
+.admin-dashboard-title {
+  margin: 0;
+  margin-bottom: var(--ant-margin-lg);
+  flex-shrink: 0;
+}
+
+.admin-dashboard-row {
+  flex: 1;
+  min-height: 0;
+}
+
+.admin-dashboard-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.admin-dashboard-stats-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--ant-margin);
+  min-height: 0;
+}
+
+.admin-dashboard-stats-row {
+  flex-shrink: 0;
+}
+
+.admin-stat-card {
+  display: flex;
+  flex-direction: column;
+  background: var(--ant-color-primary-bg);
+  padding: var(--ant-padding);
+  border-radius: var(--ant-border-radius-lg);
+}
+
+.admin-stat-label {
+  font-size: var(--ant-font-size-sm);
+}
+
+.admin-stat-value {
+  margin-top: 4px;
+  font-size: var(--ant-font-size-heading-2);
+  font-weight: var(--ant-font-weight-strong);
+}
+
+.admin-table-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+  background: var(--ant-color-primary-bg);
+  border-radius: var(--ant-border-radius);
+}
+
+.admin-table-header {
+  flex-shrink: 0;
+  padding: var(--ant-padding-sm);
+  border-bottom: var(--ant-line-width) solid var(--ant-color-border-secondary);
+}
+
+.admin-table-header-title {
+  margin: 0;
+}
+
+.admin-table-content {
+  flex: 1;
+  overflow: auto;
+}
+
+.admin-dashboard-loading {
+  height: 100vh;
+}
+
+.admin-action-btn-approve {
+  border-color: var(--ant-color-success);
+  color: var(--ant-color-success);
+  background: var(--ant-color-bg-container);
+}
+
+.admin-action-btn-unapprove {
+  border-color: var(--ant-color-warning);
+  color: var(--ant-color-warning);
+  background: var(--ant-color-bg-container);
+}
+
+.admin-action-btn-delete {
+  border-color: var(--ant-color-error);
+  color: var(--ant-color-error);
+  background: var(--ant-color-bg-container);
+}
+
+.admin-action-icon {
+  font-size: var(--ant-font-size-sm);
+}
+
+.admin-dashboard-table {
+  background: var(--ant-color-primary-bg);
+}
+
+.admin-dashboard-table .ant-table-thead > tr > th {
+  background: var(--ant-color-primary-bg-hover);
+  font-weight: var(--ant-font-weight-strong);
+  border-radius: 0;
+}
+
+.admin-dashboard-table .ant-table-tbody > tr > td {
+  background: var(--ant-color-primary-bg);
+}
+
+.admin-status-tag-published {
+  border: 1px solid var(--ant-color-success-border);
+}
+
+.admin-status-tag-draft {
+  border: 1px solid var(--ant-color-warning-border);
+}

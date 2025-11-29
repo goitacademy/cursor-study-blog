@@ -1,0 +1,407 @@
+---
+globs: *.jsx,*.js
+description: React and frontend development guidelines for the Quick Blog client application
+---
+
+# Quick Blog - React & Frontend Guidelines
+
+## React Component Patterns
+
+### Component Definition
+- **Always** use functional components with hooks (no class components)
+- Use the `function` keyword for component definitions
+- Use `.jsx` extension for all React components
+
+```javascript
+// Good
+function BlogCard({ title, excerpt, image }) {
+  return (
+    <div className="blog-card">
+      <img src={image} alt={title} />
+      <h3>{title}</h3>
+      <p>{excerpt}</p>
+    </div>
+  )
+}
+
+// Bad - no class components
+class BlogCard extends React.Component {
+  render() {
+    return <div>...</div>
+  }
+}
+```
+
+### React Hooks Usage
+
+**Core Hooks**: `useState`, `useEffect`, `useContext`, `useReducer`, `useMemo`, `useCallback`
+
+#### Rules of Hooks
+- Only call hooks at the **top level** (not inside loops, conditions, or nested functions)
+- Only call hooks from React functions (components or custom hooks)
+- Custom hooks must start with `use` prefix
+
+#### Performance Hooks
+- Use `React.memo()` for component memoization when re-renders are expensive
+- Use `useCallback` for memoizing functions passed as props
+- Use `useMemo` for expensive computations
+- Avoid inline function definitions in render to prevent unnecessary re-renders
+
+```javascript
+// Good - memoized callback
+const handleSubmit = useCallback((data) => {
+  submitForm(data)
+}, [submitForm])
+
+// Bad - creates new function on every render
+<Button onClick={() => submitForm(data)} />
+```
+
+### Component Composition
+
+- Prefer **composition over inheritance**
+- Use `children` prop for flexible component structure
+- Use render props pattern when needed
+- Keep components small and focused (single responsibility)
+
+```javascript
+// Good - composition
+function BlogLayout({ sidebar, children }) {
+  return (
+    <div className="blog-layout">
+      <aside>{sidebar}</aside>
+      <main>{children}</main>
+    </div>
+  )
+}
+
+// Usage
+<BlogLayout sidebar={<CategoryFilter />}>
+  <BlogGrid blogs={blogs} />
+</BlogLayout>
+```
+
+### Code Splitting
+
+- Use `React.lazy()` and `Suspense` for route-based code splitting
+- Load non-critical components dynamically
+
+```javascript
+const AdminDashboard = lazy(() => import('@/pages/admin/Dashboard'))
+
+function App() {
+  return (
+    <Suspense fallback={<Loader />}>
+      <AdminDashboard />
+    </Suspense>
+  )
+}
+```
+
+## State Management
+
+### Local State
+- Use `useState` for component-level state
+- Lift state up when multiple components need to share it
+- Keep state as local as possible
+
+### Global State
+- Use React Context API via [AppContext.jsx](mdc:client/src/context/AppContext.jsx)
+- Store global concerns: user session, JWT tokens, theme
+- Avoid prop drilling for deeply nested components
+
+### When to Use Context
+- Authentication state
+- User preferences
+- Global UI state (modals, notifications)
+- Shared data needed by many components
+
+## UI Library - Ant Design
+
+### 🚨 CRITICAL RULES - NO EXCEPTIONS
+
+#### Use ONLY Ant Design Components
+- **MUST** use Ant Design components for ALL UI elements
+- **NEVER** create custom components that duplicate Ant Design functionality
+- **NEVER** use components from other UI libraries (Material-UI, Bootstrap, Chakra, etc.)
+- If Ant Design has a component for your need, **YOU MUST USE IT**
+
+#### Use ONLY Ant Design Colors
+- **MUST** use Ant Design's color system exclusively
+- **NEVER** use custom color codes (hex, rgb, hsl)
+- **NEVER** use Tailwind color utilities
+- Use Ant Design theme tokens: `colorPrimary`, `colorSuccess`, `colorWarning`, `colorError`, `colorInfo`, `colorTextBase`, `colorBgContainer`, etc.
+- Reference: https://ant.design/docs/react/customize-theme#seedtoken
+
+#### Use ONLY Ant Design Sizes & Spacing
+- **MUST** use Ant Design's size system: `small`, `middle`, `large`
+- **MUST** use Ant Design's spacing scale via theme tokens
+- **NEVER** use custom pixel values for spacing
+- **NEVER** use Tailwind spacing utilities (`p-4`, `m-6`, `gap-8`, etc.)
+- Use Ant Design's Space component for consistent spacing
+- Use Ant Design's Grid system (Row, Col) for layouts
+
+### Core Ant Design Components
+
+#### Layout Components
+- `Layout`, `Header`, `Content`, `Footer`, `Sider` - Page structure
+- `Grid` (`Row`, `Col`) - Responsive grid layout
+- `Space` - Consistent spacing between elements
+- `Divider` - Visual separators
+
+#### Data Display
+- `Card` - Content containers
+- `List` - Display list of items
+- `Table` - Data tables with sorting/filtering
+- `Tag` - Labels and badges
+- `Avatar` - User/entity images
+- `Badge` - Status indicators
+- `Descriptions` - Key-value pairs display
+
+#### Form Components
+- `Form`, `Form.Item` - Form structure and validation
+- `Input`, `Input.TextArea`, `Input.Password` - Text inputs
+- `Button` - Action buttons
+- `Select`, `AutoComplete` - Dropdown selection
+- `Checkbox`, `Radio` - Selection controls
+- `DatePicker`, `TimePicker` - Date/time selection
+- `Upload` - File upload
+
+#### Navigation
+- `Menu` - Navigation menus
+- `Breadcrumb` - Navigation breadcrumbs
+- `Pagination` - Page navigation
+- `Steps` - Step indicators
+
+#### Feedback
+- `message` - Global messages
+- `notification` - Global notifications
+- `Modal` - Dialog boxes
+- `Popconfirm` - Confirmation popups
+- `Spin` - Loading indicators
+- `Skeleton` - Loading placeholders
+
+### Ant Design Best Practices
+
+#### Component Configuration
+```javascript
+import { Button, Space, Card, Typography } from 'antd'
+const { Title, Text } = Typography
+
+function BlogCard({ title, excerpt }) {
+  return (
+    <Card>
+      <Space direction="vertical" size="middle">
+        <Title level={3}>{title}</Title>
+        <Text>{excerpt}</Text>
+        <Button type="primary">Read More</Button>
+      </Space>
+    </Card>
+  )
+}
+```
+
+#### Theme Customization
+- Configure theme in app initialization using ConfigProvider
+- Use theme tokens consistently throughout the app
+- Never override with custom CSS colors
+
+```javascript
+import { ConfigProvider, theme } from 'antd'
+
+function App() {
+  return (
+    <ConfigProvider
+      theme={{
+        token: {
+          colorPrimary: '#1890ff',
+          borderRadius: 6,
+        },
+      }}
+    >
+      {/* Your app */}
+    </ConfigProvider>
+  )
+}
+```
+
+#### Responsive Design
+- Use Ant Design's Grid system with breakpoints
+- Breakpoints: `xs` (mobile), `sm`, `md`, `lg`, `xl`, `xxl`
+- Use responsive props on components when available
+
+```javascript
+<Row gutter={[16, 16]}>
+  <Col xs={24} sm={12} md={8} lg={6}>
+    <Card>Content</Card>
+  </Col>
+</Row>
+```
+
+## Forms & Validation
+
+### Form Pattern
+- Use **controlled components** for form inputs
+- Handle loading states during submission
+- Implement validation (client-side and server-side)
+- Use React Hot Toast for user feedback
+
+```javascript
+function CommentForm({ blogId, onSuccess }) {
+  const [formData, setFormData] = useState({ name: '', comment: '' })
+  const [isSubmitting, setIsSubmitting] = useState(false)
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    
+    if (!formData.name || !formData.comment) {
+      toast.error('Please fill in all fields')
+      return
+    }
+
+    setIsSubmitting(true)
+    try {
+      await submitComment(blogId, formData)
+      toast.success('Comment submitted!')
+      onSuccess()
+    } catch (error) {
+      toast.error(error.message || 'Failed to submit comment')
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
+  return (
+    <form onSubmit={handleSubmit}>
+      {/* form fields */}
+      <button disabled={isSubmitting}>
+        {isSubmitting ? 'Submitting...' : 'Submit'}
+      </button>
+    </form>
+  )
+}
+```
+
+## Performance Optimization
+
+### Minimize Re-renders
+- Use `React.memo()` for expensive components
+- Memoize callbacks with `useCallback`
+- Memoize computed values with `useMemo`
+- Avoid creating objects/arrays in render
+
+### Lazy Loading
+- Implement lazy loading for images
+- Use dynamic imports for routes
+- Load non-critical components after initial render
+
+### Effect Optimization
+- Keep `useEffect` dependencies minimal
+- Use cleanup functions to prevent memory leaks
+- Avoid unnecessary effects
+
+```javascript
+// Good - cleanup function
+useEffect(() => {
+  const subscription = subscribeToUpdates()
+  
+  return () => {
+    subscription.unsubscribe()
+  }
+}, [])
+```
+
+## Error Handling
+
+### Component Level
+- Handle errors at the beginning of functions
+- Use early returns for error conditions
+- Display user-friendly messages with React Hot Toast
+- Log errors to console for debugging
+
+### Conditional Rendering
+- Use short-circuit evaluation: `{isLoading && <Loader />}`
+- Use ternary operators: `{error ? <Error /> : <Content />}`
+- Avoid complex nested ternaries
+
+## Refs & DOM Access
+
+- Use refs sparingly - mainly for DOM access
+- Common use cases: focus management, measuring elements, third-party DOM libraries
+- Prefer declarative approaches over imperative
+
+## Component Structure Example
+
+```javascript
+import { useState, useEffect, useCallback } from 'react'
+import { toast } from 'react-hot-toast'
+import { BlogCard } from '@/components/blog'
+import { fetchBlogs } from '@/api/blogApi'
+
+// Main component
+function BlogList({ category }) {
+  const [blogs, setBlogs] = useState([])
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState(null)
+
+  const loadBlogs = useCallback(async () => {
+    setIsLoading(true)
+    setError(null)
+    
+    try {
+      const data = await fetchBlogs({ category })
+      setBlogs(data)
+    } catch (err) {
+      setError(err.message)
+      toast.error('Failed to load blogs')
+    } finally {
+      setIsLoading(false)
+    }
+  }, [category])
+
+  useEffect(() => {
+    loadBlogs()
+  }, [loadBlogs])
+
+  if (isLoading) return <LoadingSpinner />
+  if (error) return <ErrorMessage message={error} />
+  if (blogs.length === 0) return <EmptyState />
+
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {blogs.map(blog => (
+        <BlogCard key={blog._id} {...blog} />
+      ))}
+    </div>
+  )
+}
+
+// Subcomponents
+function LoadingSpinner() {
+  return <div className="flex justify-center p-8">Loading...</div>
+}
+
+function ErrorMessage({ message }) {
+  return <div className="text-red-600 p-4">{message}</div>
+}
+
+function EmptyState() {
+  return <div className="text-gray-500 p-8 text-center">No blogs found</div>
+}
+
+export { BlogList }
+```
+
+## What NOT to Do
+
+❌ Don't use class components
+❌ Don't use TypeScript (this is a JavaScript project)
+❌ Don't use CSS-in-JS or styled-components
+❌ Don't use any UI library other than Ant Design
+❌ Don't use custom colors (hex, rgb, hsl) - use Ant Design theme tokens only
+❌ Don't use custom spacing values - use Ant Design's size system and Space component
+❌ Don't use Tailwind CSS classes (no longer used in this project)
+❌ Don't ignore error handling
+❌ Don't create inline functions in render without memoization
+❌ Don't mutate state directly
+❌ Don't forget cleanup functions in `useEffect`

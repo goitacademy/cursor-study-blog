@@ -1,0 +1,19 @@
+.header-section {
+  position: relative;
+  overflow: hidden;
+}
+
+.header-content {
+  text-align: center;
+  position: relative;
+  z-index: 1;
+}
+
+.header-title {
+  line-height: 1.2;
+}
+
+.header-search-container {
+  margin: 0 auto;
+}
+

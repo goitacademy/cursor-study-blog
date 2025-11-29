@@ -1,0 +1,206 @@
+{
+  "common": {
+    "appName": "StudySprint",
+    "copyright": "©QuickBlog, 2025, All Rights Reserved",
+    "loading": "Loading...",
+    "search": "Search",
+    "submit": "Submit",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "save": "Save",
+    "publish": "Publish",
+    "unpublish": "Unpublish",
+    "subscribe": "Subscribe",
+    "clearSearch": "Clear Search"
+  },
+  "nav": {
+    "home": "Home",
+    "articles": "Articles",
+    "dashboard": "Dashboard",
+    "login": "Login",
+    "register": "Register",
+    "logout": "Log Out"
+  },
+  "footer": {
+    "quickLinks": "Quick links",
+    "allArticles": "All Articles",
+    "followUs": "Follow Us",
+    "instagram": "Instagram",
+    "twitter": "Twitter",
+    "facebook": "Facebook",
+    "youtube": "YouTube"
+  },
+  "header": {
+    "tagline": "New: AI feature integrated",
+    "title": "Your own",
+    "titleHighlight": "blogging",
+    "titleEnd": "platform.",
+    "description": "This is your space to think out loud, to share what matters, and to write without filters. Whether it's one word or a thousand, your story starts right here.",
+    "searchPlaceholder": "Search for blogs..."
+  },
+  "newsletter": {
+    "title": "Never Miss a Blog!",
+    "description": "Subscribe to get the latest blog, new tech, and exclusive news.",
+    "placeholder": "Enter your email id",
+    "successMessage": "Successfully subscribed to newsletter!"
+  },
+  "blog": {
+    "noBlogs": "No blogs found",
+    "readMore": "Read More",
+    "publishedOn": "Published on",
+    "by": "By",
+    "comments": "Comments",
+    "status": {
+      "published": "Published",
+      "draft": "Draft"
+    }
+  },
+  "blogDetail": {
+    "shareTitle": "Share this article on social media",
+    "coverAlt": "Article cover"
+  },
+  "comment": {
+    "title": "Leave a comment",
+    "description": "Want to share your thoughts or leave a comment? We'd love to hear from you!",
+    "namePlaceholder": "Your name",
+    "contentPlaceholder": "Your comment",
+    "submitButton": "Submit Comment",
+    "noComments": "No comments yet. Be the first!",
+    "alreadyApproved": "Already approved",
+    "approve": "Approve comment",
+    "unapprove": "Unapprove comment",
+    "deleteComment": "Delete comment"
+  },
+  "admin": {
+    "sidebar": {
+      "dashboard": "Dashboard",
+      "addArticle": "Add Article",
+      "allArticles": "All Articles",
+      "comments": "Comments"
+    },
+    "dashboard": {
+      "title": "Dashboard",
+      "articles": "Articles",
+      "comments": "Comments",
+      "drafts": "Drafts",
+      "latestArticles": "Latest Articles",
+      "latestComments": "Latest Comments"
+    },
+    "addBlog": {
+      "title": "Add Article",
+      "uploadThumbnail": "Upload thumbnail",
+      "uploadButton": "Upload",
+      "titleLabel": "Title",
+      "titlePlaceholder": "Type here",
+      "subtitleLabel": "Subtitle",
+      "categoryLabel": "Category",
+      "categoryPlaceholder": "Select Category",
+      "bodyLabel": "Article text",
+      "generateAI": "Generate with AI",
+      "publishButton": "Publish Article",
+      "saveDraft": "Save Draft"
+    },
+    "listBlog": {
+      "title": "All Articles",
+      "articlesCount": "Articles:",
+      "sorting": "Sorting:",
+      "sortLatest": "Latest",
+      "sortAZ": "A-Z",
+      "totalArticles": "Total {{count}} articles",
+      "columns": {
+        "index": "#",
+        "blogTitle": "Blog Title",
+        "date": "Date",
+        "status": "Status",
+        "actions": "Actions",
+        "comments": "Comments"
+      }
+    },
+    "comments": {
+      "title": "Comments",
+      "commentsCount": "Comments:",
+      "sortByArticle": "By Article",
+      "totalComments": "Total {{count}} comments",
+      "columns": {
+        "index": "#",
+        "comment": "Comment",
+        "article": "Article",
+        "author": "Author",
+        "actions": "Actions"
+      }
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "Log In",
+      "emailLabel": "Email",
+      "emailPlaceholder": "hello@quickblog.com",
+      "passwordLabel": "Password",
+      "passwordPlaceholder": "Password",
+      "forgotPassword": "Forget Password?",
+      "reset": "Reset",
+      "submitButton": "Log In",
+      "noAccount": "Don't have account?",
+      "register": "Register"
+    },
+    "register": {
+      "title": "Register",
+      "repeatPasswordLabel": "Repeat password",
+      "submitButton": "Register",
+      "hasAccount": "Already have account?",
+      "login": "Log In"
+    },
+    "resetPassword": {
+      "title": "Reset Password",
+      "description": "Enter your email address below, and if it matches an existing account, we'll send you a link to reset your password.",
+      "submitButton": "Send reset link",
+      "successMessage": "If the email exists, a reset link has been sent!"
+    }
+  },
+  "validation": {
+    "required": "This field is required",
+    "emailRequired": "Please enter your email",
+    "emailInvalid": "Please enter a valid email",
+    "passwordRequired": "Please enter your password",
+    "passwordMin": "Password must be at least 6 characters",
+    "confirmPasswordRequired": "Please confirm your password",
+    "passwordMismatch": "Passwords do not match",
+    "nameRequired": "Please enter your name",
+    "commentRequired": "Please enter your comment",
+    "titleRequired": "Please enter article title",
+    "subtitleRequired": "Please enter subtitle",
+    "categoryRequired": "Please select a category"
+  },
+  "messages": {
+    "success": {
+      "blogCreated": "Blog created successfully!",
+      "blogDeleted": "Blog deleted successfully!",
+      "blogPublished": "Blog published successfully",
+      "blogUnpublished": "Blog unpublished successfully",
+      "commentAdded": "Comment added successfully!",
+      "commentDeleted": "Comment deleted successfully!",
+      "commentApproved": "Comment approved successfully!",
+      "commentUnapproved": "Comment unapproved successfully!",
+      "login": "Login successful!",
+      "logout": "Logout successful!"
+    },
+    "error": {
+      "generic": "Something went wrong. Please try again.",
+      "login": "Login failed. Please check your credentials.",
+      "registration": "Registration failed",
+      "passwordReset": "Password reset failed",
+      "blogDescription": "Please add blog description",
+      "blogThumbnail": "Please upload a thumbnail image",
+      "blogTitle": "Please enter a title first",
+      "blogTitleMin": "Please enter at least a title",
+      "invalidEmail": "Please enter a valid email address",
+      "imageType": "You can only upload image files!",
+      "imageSize": "Image must be smaller than 5MB!"
+    },
+    "info": {
+      "registrationComingSoon": "Registration feature coming soon!"
+    }
+  }
+}
+

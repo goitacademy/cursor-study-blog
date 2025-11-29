@@ -1,0 +1,43 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "server": "NODE_ENV=development nodemon server.js",
+    "start": "NODE_ENV=production node server.js",
+    "db:start": "docker-compose up -d",
+    "db:stop": "docker-compose down",
+    "db:restart": "docker-compose restart",
+    "db:logs": "docker-compose logs -f mongodb",
+    "db:clean": "docker-compose down -v",
+    "migrate:status": "migrate-mongo status -f migrations/migrate-mongo-config.cjs",
+    "migrate:up": "migrate-mongo up -f migrations/migrate-mongo-config.cjs",
+    "migrate:down": "migrate-mongo down -f migrations/migrate-mongo-config.cjs",
+    "migrate:create": "migrate-mongo create -f migrations/migrate-mongo-config.cjs",
+    "seed": "NODE_ENV=development node scripts/seed.js",
+    "setup": "npm run db:start && sleep 5 && npm run seed",
+    "dev": "npm run db:start && npm run server"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@google/genai": "^1.0.1",
+    "bcryptjs": "^3.0.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "express-mongo-sanitize": "^2.2.0",
+    "express-rate-limit": "^8.2.1",
+    "helmet": "^8.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.15.0",
+    "multer": "^2.0.0"
+  },
+  "devDependencies": {
+    "migrate-mongo": "^11.0.0",
+    "nodemon": "^3.1.10"
+  }
+}

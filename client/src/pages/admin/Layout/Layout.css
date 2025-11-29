@@ -1,0 +1,64 @@
+.admin-layout {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.admin-header {
+  background: var(--ant-color-bg-container);
+  padding: 0 var(--ant-padding-lg);
+  border-bottom: var(--ant-line-width) solid var(--ant-color-border);
+  height: 64px;
+}
+
+.admin-header-content {
+  height: 100%;
+}
+
+.admin-header-logo {
+  cursor: pointer;
+}
+
+.admin-header-logo-img {
+  width: 40px;
+  height: 40px;
+}
+
+.admin-header-logo-title {
+  margin: 0;
+}
+
+.admin-logout-btn {
+  border-color: var(--ant-color-primary);
+  color: var(--ant-color-primary);
+}
+
+.admin-content-layout {
+  flex: 1;
+  display: flex;
+  min-height: 0;
+  background: var(--ant-color-bg-container);
+}
+
+.admin-sider {
+  background: var(--ant-color-bg-container);
+  border-right: var(--ant-line-width) solid var(--ant-color-split);
+}
+
+.admin-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.admin-footer {
+  background: var(--ant-color-bg-container);
+  padding: var(--ant-padding-sm) var(--ant-padding-lg);
+  border-top: var(--ant-line-width) solid var(--ant-color-border);
+}
+
+.admin-footer-logo-img {
+  width: 32px;
+  height: 32px;
+}

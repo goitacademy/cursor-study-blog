@@ -1,0 +1,25 @@
+.admin-articles {
+  flex: 1;
+  min-height: 0;
+  padding: var(--ant-padding-lg);
+  background: var(--ant-color-bg-container);
+}
+
+.admin-articles-header {
+  flex-shrink: 0;
+  flex-wrap: wrap;
+  gap: var(--ant-margin);
+  margin-bottom: var(--ant-margin);
+}
+
+.admin-articles-title {
+  margin: 0;
+}
+
+.admin-articles-count {
+  font-size: var(--ant-font-size-lg);
+}
+
+.admin-articles-loading {
+  height: 100vh;
+}
