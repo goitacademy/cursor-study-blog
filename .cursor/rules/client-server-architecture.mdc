@@ -1,8 +1,8 @@
 ---
-description: Client-server communication architecture, API flows, and data patterns in the Quick Blog application
+description: Client-server communication architecture, API flows, and data patterns in the StudySprint application
 ---
 
-# Quick Blog - Client-Server Architecture
+# StudySprint - Client-Server Architecture
 
 ## Overall Architecture
 
@@ -11,7 +11,8 @@ The application follows a typical MERN stack architecture with clear separation 
 **Client (React + Vite)**: Handles UI/UX, routing, state management, and API communication
 **Server (Express + Node.js)**: Manages business logic, authentication, database operations, and external services
 **Database (MongoDB)**: Stores blogs, comments, and user data
-**External Services**: ImageKit (CDN), Google Gemini API (AI features)
+**File Storage**: Local filesystem (`/uploads/blogs/`) for blog images
+**External Services**: Google Gemini API (AI features, optional)
 
 ## Request/Response Flow
 
@@ -62,13 +63,12 @@ All requests include JWT token in Authorization header when authenticated.
 
 #### Protected Routes (Admin Only - JWT Required)
 - `POST /api/admin/login` - Admin authentication
-- `POST /api/admin/add-blog` - Create new blog
+- `POST /api/admin/add-blog` - Create new blog (with image upload)
 - `PUT /api/admin/update-blog/:id` - Update blog
 - `DELETE /api/admin/delete-blog/:id` - Delete blog
 - `GET /api/admin/blogs` - Get all blogs (admin view)
 - `GET /api/admin/comments` - Get all comments
 - `DELETE /api/admin/delete-comment/:id` - Delete comment
-- `POST /api/admin/upload` - Upload image to ImageKit
 
 ### Middleware Stack
 1. **Auth Middleware** ([middleware/auth.js](mdc:server/src/middleware/auth.js)) - Validates JWT tokens
@@ -109,10 +109,10 @@ AddBlog Page → BlogForm Component → useCreateBlog Hook
 ### 3. Image Upload (Admin)
 ```
 BlogForm → File Input → Select Image 
-  → adminApi.uploadImage() → POST /api/admin/upload
+  → adminApi.createBlog() → POST /api/admin/add-blog (multipart/form-data)
   → Auth Middleware → Multer Middleware (parse multipart/form-data)
-  → adminController.uploadImage() → ImageKit.upload() 
-  → ImageKit CDN → Return Image URL → Use in Blog Document
+  → adminController.addBlog() → Multer saves to /uploads/blogs/
+  → Store file path in Blog document → MongoDB → Return Blog with image URL
 ```
 
 ### 4. Add Comment (Public)
@@ -158,14 +158,16 @@ res.json({
 
 ## External Service Integration
 
-### ImageKit CDN
-- Configuration: [configs/imageKit.js](mdc:server/src/configs/imageKit.js)
-- Used for: Image uploads, storage, and optimization
-- Flow: Multer (memory) → ImageKit upload → Return URL → Store in DB
+### Local File Storage
+- Configuration: [middleware/multer.js](mdc:server/src/middleware/multer.js)
+- Used for: Image uploads and storage on local filesystem
+- Location: `/uploads/blogs/` directory
+- Serving: Express static middleware serves files at `/uploads/blogs/:filename`
+- Flow: Multer (disk storage) → Save to filesystem → Store path in DB → Serve via static route
 
 ### Google Gemini API
 - Configuration: [configs/gemini.js](mdc:server/src/configs/gemini.js)
-- Used for: AI-powered content features
+- Used for: AI-powered content generation (optional)
 - Integration: Server-side only (API key protected)
 
 ## Security & Authentication
@@ -231,15 +233,16 @@ try {
 ### Server (Vercel)
 - Deployed from `/server` directory
 - Serverless functions
-- Environment variables: MongoDB URI, JWT secret, ImageKit keys, Gemini API key
+- Environment variables: MongoDB URI, JWT secret, Gemini API key (optional)
 - CORS configured for production client URL
+- File uploads stored in Vercel's filesystem (ephemeral) or external storage
 
 ## Performance Considerations
 
 1. **Client**: 
    - React.memo() for expensive components
    - Lazy loading for routes
-   - Image optimization via ImageKit
+   - Image optimization via proper sizing and formats
 
 2. **Server**:
    - Database indexes on frequent queries

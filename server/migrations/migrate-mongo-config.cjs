@@ -4,7 +4,7 @@ require('dotenv').config()
 
 module.exports = {
   mongodb: {
-    url: process.env.MONGODB_URI || 'mongodb://quickblog:quickblog123@localhost:27017/quickblog',
+    url: process.env.MONGODB_URI || 'mongodb://studysprint:studysprint123@localhost:27017/studysprint',
     options: {}
   },
 

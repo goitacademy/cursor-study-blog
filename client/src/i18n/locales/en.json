@@ -1,7 +1,7 @@
 {
   "common": {
     "appName": "StudySprint",
-    "copyright": "©QuickBlog, 2025, All Rights Reserved",
+    "copyright": "©StudySprint, 2025, All Rights Reserved",
     "loading": "Loading...",
     "search": "Search",
     "submit": "Submit",
@@ -135,7 +135,7 @@
     "login": {
       "title": "Log In",
       "emailLabel": "Email",
-      "emailPlaceholder": "hello@quickblog.com",
+      "emailPlaceholder": "hello@studysprint.com",
       "passwordLabel": "Password",
       "passwordPlaceholder": "Password",
       "forgotPassword": "Forget Password?",

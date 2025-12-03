@@ -1,8 +1,8 @@
 ---
-description: Backend development guidelines for Node.js, Express, and MongoDB in Quick Blog
+description: Backend development guidelines for Node.js, Express, and MongoDB in StudySprint
 ---
 
-# Quick Blog - Backend Guidelines
+# StudySprint - Backend Guidelines
 
 ## Express & Node.js Patterns
 
@@ -235,9 +235,9 @@ const controllerFunction = async (req, res) => {
 - Required variables:
   - `MONGODB_URI` - Database connection string
   - `JWT_SECRET` - Secret for JWT signing
-  - `IMAGEKIT_PUBLIC_KEY`, `IMAGEKIT_PRIVATE_KEY`, `IMAGEKIT_URL_ENDPOINT`
-  - `GEMINI_API_KEY` - For AI features
-  - `PORT` - Server port (default: 5000)
+  - `GEMINI_API_KEY` - For AI features (optional)
+  - `PORT` - Server port (default: 5001)
+  - `CLIENT_URL` - Client application URL for CORS
 
 ### CORS Configuration
 - Configure CORS to accept requests from client domain
@@ -248,38 +248,23 @@ const controllerFunction = async (req, res) => {
 
 ### Upload Flow
 1. Multer middleware parses `multipart/form-data`
-2. File stored in memory (not disk)
-3. Upload to ImageKit CDN via [imageKit.js](mdc:server/src/configs/imageKit.js)
-4. Store returned URL in database
-5. Client fetches images from ImageKit CDN
+2. File stored on local filesystem in `/uploads/blogs/` directory
+3. Multer generates unique filename with timestamp and random string
+4. Store file path/URL in database
+5. Client fetches images via Express static file serving at `/uploads/blogs/:filename`
 
 ```javascript
-const uploadImage = async (req, res) => {
-  try {
-    if (!req.file) {
-      return res.status(400).json({
-        success: false,
-        message: 'No file uploaded'
-      })
-    }
-
-    const result = await imagekit.upload({
-      file: req.file.buffer,
-      fileName: req.file.originalname
-    })
-
-    res.json({
-      success: true,
-      data: { url: result.url }
-    })
-  } catch (error) {
-    console.error('Upload error:', error)
-    res.status(500).json({
-      success: false,
-      message: 'Failed to upload image'
-    })
+// Multer configuration in middleware/multer.js
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, uploadsDir) // /uploads/blogs/
+  },
+  filename: (req, file, cb) => {
+    const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1E9)}`
+    const ext = path.extname(file.originalname)
+    cb(null, `blog-${uniqueSuffix}${ext}`)
   }
-}
+})
 ```
 
 ### Image Validation

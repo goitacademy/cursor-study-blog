@@ -40,10 +40,10 @@ function BlogHeader({ blog, author = DEFAULTS.AUTHOR }) {
             style={{
               fontSize: token.fontSizeLG,
               color: token.colorTextBase
-            }}
-          >
+          }}
+        >
             {author}
-          </Text>
+        </Text>
           <Tag
             color="volcano"
             style={{

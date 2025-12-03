@@ -3,12 +3,12 @@ version: '3.8'
 services:
   mongodb:
     image: mongo:7.0
-    container_name: quickblog-mongodb
+    container_name: studysprint-mongodb
     restart: unless-stopped
     environment:
-      MONGO_INITDB_ROOT_USERNAME: ${MONGODB_USER:-quickblog}
-      MONGO_INITDB_ROOT_PASSWORD: ${MONGODB_PASSWORD:-quickblog123}
-      MONGO_INITDB_DATABASE: ${MONGODB_DATABASE:-quickblog}
+      MONGO_INITDB_ROOT_USERNAME: ${MONGODB_USER:-studysprint}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGODB_PASSWORD:-studysprint123}
+      MONGO_INITDB_DATABASE: ${MONGODB_DATABASE:-studysprint}
     ports:
       - '27017:27017'
     volumes:
@@ -16,27 +16,27 @@ services:
       - mongodb_config:/data/configdb
       - ./init-scripts:/docker-entrypoint-initdb.d
     networks:
-      - quickblog-network
+      - studysprint-network
     healthcheck:
-      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/quickblog --quiet
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/studysprint --quiet
       interval: 10s
       timeout: 5s
       retries: 5
 
   mongo-express:
     image: mongo-express:latest
-    container_name: quickblog-mongo-express
+    container_name: studysprint-mongo-express
     restart: unless-stopped
     ports:
       - '8081:8081'
     environment:
-      ME_CONFIG_MONGODB_ADMINUSERNAME: ${MONGODB_USER:-quickblog}
-      ME_CONFIG_MONGODB_ADMINPASSWORD: ${MONGODB_PASSWORD:-quickblog123}
-      ME_CONFIG_MONGODB_URL: mongodb://${MONGODB_USER:-quickblog}:${MONGODB_PASSWORD:-quickblog123}@mongodb:27017/
-      ME_CONFIG_BASICAUTH_USERNAME: ${MONGODB_USER:-quickblog}
-      ME_CONFIG_BASICAUTH_PASSWORD: ${MONGODB_PASSWORD:-quickblog123}
+      ME_CONFIG_MONGODB_ADMINUSERNAME: ${MONGODB_USER:-studysprint}
+      ME_CONFIG_MONGODB_ADMINPASSWORD: ${MONGODB_PASSWORD:-studysprint123}
+      ME_CONFIG_MONGODB_URL: mongodb://${MONGODB_USER:-studysprint}:${MONGODB_PASSWORD:-studysprint123}@mongodb:27017/
+      ME_CONFIG_BASICAUTH_USERNAME: ${MONGODB_USER:-studysprint}
+      ME_CONFIG_BASICAUTH_PASSWORD: ${MONGODB_PASSWORD:-studysprint123}
     networks:
-      - quickblog-network
+      - studysprint-network
     depends_on:
       mongodb:
         condition: service_healthy
@@ -48,6 +48,6 @@ volumes:
     driver: local
 
 networks:
-  quickblog-network:
+  studysprint-network:
     driver: bridge
 

@@ -1,9 +1,12 @@
-## Client — QuickBlog Web App
+## Client — StudySprint Web App
 
 React + Vite single‑page app for browsing blogs, reading posts, commenting, and administering content.
 
-### Tech
-- React 19, React Router, Axios, Ant Design, Quill editor, Marked, React‑Hot‑Toast
+### Tech Stack
+- **Core:** React 19, React Router, Axios
+- **UI:** Ant Design, @ant-design/icons
+- **Content:** Quill editor, Marked, DOMPurify
+- **Utils:** React Hot Toast, i18next/react-i18next, Moment.js
 
 ### Environment
 Copy `.env.example` to `.env` and set:
@@ -24,7 +27,10 @@ For the full feature list and endpoints, see `../server/README.md`.
 ### Notes
 - Axios `baseURL` is `import.meta.env.VITE_BASE_URL`
 - On login, JWT is stored and attached to `Authorization` header
-- Rich text HTML is stored in the database; Quill renders/edit
+- Rich text HTML is stored in the database; Quill renders/edits content
+- i18next handles internationalization (currently English)
+- DOMPurify sanitizes HTML content for safe rendering
+- Moment.js formats dates throughout the application
 
 # React + Vite
 

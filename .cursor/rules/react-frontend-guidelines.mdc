@@ -1,9 +1,9 @@
 ---
 globs: *.jsx,*.js
-description: React and frontend development guidelines for the Quick Blog client application
+description: React and frontend development guidelines for the StudySprint client application
 ---
 
-# Quick Blog - React & Frontend Guidelines
+# StudySprint - React & Frontend Guidelines
 
 ## React Component Patterns
 

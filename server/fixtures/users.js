@@ -1,6 +1,6 @@
 export const users = [
   {
-    email: 'admin@quickblog.com',
+    email: 'admin@studysprint.com',
     password: 'admin123',
     name: 'Michael Brown',
     role: 'admin',
@@ -8,7 +8,7 @@ export const users = [
     isActive: true
   },
   {
-    email: 'sarah@quickblog.com',
+    email: 'sarah@studysprint.com',
     password: 'sarah123',
     name: 'Sarah Johnson',
     role: 'author',

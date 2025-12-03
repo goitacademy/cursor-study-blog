@@ -1,13 +1,16 @@
-# Quick Blog — Server API
+# StudySprint — Server API
 
 Express server with blog CRUD, comments, admin auth, local file uploads, and AI content generation.
 
 ## Tech Stack
-- **Backend:** Express 5, Mongoose 8, JWT, Multer
+- **Backend:** Express 5, Mongoose 8
+- **Authentication:** JWT (jsonwebtoken), bcryptjs
+- **Security:** CORS, Helmet, express-rate-limit
+- **File Upload:** Multer
 - **Database:** MongoDB (local via Docker)
 - **File Storage:** Local filesystem (`/uploads/blogs/`)
 - **Integrations:** Google Gemini AI (optional)
-- **Dev Tools:** migrate-mongo, Docker Compose
+- **Dev Tools:** migrate-mongo, Docker Compose, nodemon
 - **Logging:** HTTP requests/responses + Database changes
 
 > **Note:** This setup uses a **local MongoDB database** running in Docker. No cloud database needed for development!
@@ -55,10 +58,10 @@ npm run server
 ### Setup (.env)
 ```bash
 # Local Database (used by Docker and application)
-MONGODB_USER=quickblog
-MONGODB_PASSWORD=quickblog123
-MONGODB_DATABASE=quickblog
-MONGODB_URI=mongodb://quickblog:quickblog123@localhost:27017/quickblog
+MONGODB_USER=studysprint
+MONGODB_PASSWORD=studysprint123
+MONGODB_DATABASE=studysprint
+MONGODB_URI=mongodb://studysprint:studysprint123@localhost:27017/studysprint
 
 # Server
 PORT=5001
@@ -126,20 +129,20 @@ The existing migration files (`20241014000001-add-blog-indexes.js`, etc.) are **
 
 ## 🗄️ View Your Local Database
 
-> **Note:** All credentials are configured in your `.env` file. Default values are `quickblog` / `quickblog123`.
+> **Note:** All credentials are configured in your `.env` file. Default values are `studysprint` / `studysprint123`.
 
 ### Option 1: Mongo Express (Web UI) ✨
 Built-in web interface to view and manage your data:
 1. Start Docker: `npm run db:start`
 2. Open browser: `http://localhost:8081`
-3. Login with your `MONGODB_USER` / `MONGODB_PASSWORD` (default: `quickblog` / `quickblog123`)
+3. Login with your `MONGODB_USER` / `MONGODB_PASSWORD` (default: `studysprint` / `studysprint123`)
 4. Browse your data visually
 
 ### Option 2: MongoDB Compass (Desktop App)
 Professional desktop application:
 1. Download: [mongodb.com/compass](https://www.mongodb.com/products/compass)
-2. Connect using your `MONGODB_URI` from `.env` (default: `mongodb://quickblog:quickblog123@localhost:27017`)
-3. View: `quickblog` database
+2. Connect using your `MONGODB_URI` from `.env` (default: `mongodb://studysprint:studysprint123@localhost:27017`)
+3. View: `studysprint` database
 
 ---
 
@@ -224,8 +227,8 @@ All HTTP requests/responses and database changes are automatically logged.
 **MongoDB Container** (Your Database):
 - Local database server on port `27017`
 - Credentials configured via `.env` file (`MONGODB_USER`, `MONGODB_PASSWORD`)
-- Default: `quickblog` / `quickblog123`
-- Database: `quickblog` (or `MONGODB_DATABASE` from `.env`)
+- Default: `studysprint` / `studysprint123`
+- Database: `studysprint` (or `MONGODB_DATABASE` from `.env`)
 - Data persists in Docker volumes
 
 **Mongo Express Container** (Optional Web UI):
@@ -287,7 +290,7 @@ server/
 
 ### Architecture Patterns
 ✅ **MVC Pattern** - Models, Views (JSON responses), Controllers
-✅ **Middleware Chain** - CORS → Body Parser → Static Files → Cache Control → Logging → Routes → Error Handlers
+✅ **Middleware Chain** - CORS → Helmet → Body Parser → Rate Limiting → Static Files → Cache Control → Logging → Routes → Error Handlers
 ✅ **Centralized Error Handling** - 404 handler + global error handler
 ✅ **Environment-Based Configuration** - Different behavior for dev/prod
 
@@ -296,7 +299,7 @@ server/
 ✅ **Response Metadata** - List endpoints include `count` field
 ✅ **No Magic Strings** - Constants for messages and status codes
 ✅ **Input Validation** - Middleware validates before hitting controllers
-✅ **Security** - CORS configuration, JWT authentication, input sanitization
+✅ **Security** - CORS configuration, Helmet security headers, JWT authentication, bcryptjs password hashing, express-rate-limit for API protection
 
 ### Developer Experience
 ✅ **Enhanced Logging** - HTTP requests show metadata (status, count, duration)

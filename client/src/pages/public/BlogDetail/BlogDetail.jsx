@@ -47,7 +47,7 @@ function BlogDetail() {
           gap={token.marginXL}
           style={{ width: '100%', maxWidth: 1376, padding: `0 ${token.paddingLG}px` }}
         >
-          <BlogHeader blog={blog} />
+      <BlogHeader blog={blog} />
 
           <BlogContent content={blog.description} />
         </Flex>
@@ -75,7 +75,7 @@ function BlogDetail() {
             gap={token.marginLG}
             style={{ width: '100%', maxWidth: LAYOUT.COMMENTS_MAX_WIDTH }}
           >
-            <CommentForm onSubmit={handleAddComment} />
+      <CommentForm onSubmit={handleAddComment} />
 
             <CommentList comments={comments} />
           </Flex>

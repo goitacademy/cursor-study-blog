@@ -2,7 +2,7 @@
 alwaysApply: true
 ---
 
-# AI Assistant Guidelines for Quick Blog
+# AI Assistant Guidelines for StudySprint
 
 ## When Writing Code
 
@@ -145,8 +145,9 @@ Remember this is a **MERN stack** application:
 - **Node.js** - Runtime environment
 
 ### Key Tools & Libraries
-- **Frontend**: React Router, Ant Design, Axios, React Hot Toast, Quill
-- **Backend**: Mongoose, JWT, Multer, ImageKit, Google Gemini API
+- **Frontend**: React Router, Ant Design, Axios, React Hot Toast, Quill, i18next, Moment.js, DOMPurify
+- **Backend**: Mongoose, JWT, Multer, bcryptjs, CORS, Helmet, express-rate-limit, Google Gemini API
+- **File Storage**: Local filesystem (Multer disk storage)
 - **Deployment**: Vercel (separate deployments for client and server)
 
 ### Development Priorities

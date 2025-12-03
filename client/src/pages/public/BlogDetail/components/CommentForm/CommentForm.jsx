@@ -37,15 +37,15 @@ function CommentForm({ onSubmit, loading = false }) {
     >
       <Title
         level={3}
-        style={{
+      style={{
           margin: 0,
           marginBottom: token.marginXS,
           fontWeight: token.fontWeightStrong,
           color: token.colorTextBase
         }}
       >
-        {t('comment.title')}
-      </Title>
+          {t('comment.title')}
+        </Title>
 
       <Form
         form={form}

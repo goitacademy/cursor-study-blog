@@ -17,28 +17,28 @@ function CommentList({ comments }) {
   }
 
   return (
-    <Space direction="vertical" size="large" style={{ width: '100%' }}>
-      {comments.map((comment) => (
+        <Space direction="vertical" size="large" style={{ width: '100%' }}>
+          {comments.map((comment) => (
         <Flex
-          key={comment._id}
+              key={comment._id}
           gap={token.marginMD}
           align="flex-start"
-          style={{
-            background: token.colorPrimaryBg,
-            borderRadius: 16,
-            padding: token.padding
-          }}
-        >
-          <Avatar
-            size={32}
-            icon={<UserOutlined />}
-            style={{
-              background: token.colorTextPlaceholder,
-              flexShrink: 0
-            }}
-          />
-          <Flex vertical style={{ flex: 1, minWidth: 0 }}>
-            <Flex justify="space-between" align="center">
+              style={{
+                background: token.colorPrimaryBg,
+                borderRadius: 16,
+                padding: token.padding
+              }}
+            >
+                <Avatar
+                  size={32}
+                  icon={<UserOutlined />}
+                  style={{ 
+                    background: token.colorTextPlaceholder,
+                    flexShrink: 0
+                  }}
+                />
+                <Flex vertical style={{ flex: 1, minWidth: 0 }}>
+                  <Flex justify="space-between" align="center">
               <Text
                 strong
                 style={{
@@ -46,8 +46,8 @@ function CommentList({ comments }) {
                   color: token.colorTextBase
                 }}
               >
-                {comment.name}
-              </Text>
+                      {comment.name}
+                    </Text>
               <Text
                 strong
                 style={{
@@ -55,9 +55,9 @@ function CommentList({ comments }) {
                   color: token.colorTextBase
                 }}
               >
-                {moment(comment.createdAt).format(DATE_FORMATS.DISPLAY)}
-              </Text>
-            </Flex>
+                      {moment(comment.createdAt).format(DATE_FORMATS.DISPLAY)}
+                    </Text>
+                  </Flex>
             <Text
               style={{
                 fontSize: token.fontSizeLG,
@@ -65,12 +65,12 @@ function CommentList({ comments }) {
                 color: token.colorTextBase
               }}
             >
-              {comment.content}
-            </Text>
-          </Flex>
-        </Flex>
-      ))}
-    </Space>
+                    {comment.content}
+                  </Text>
+                </Flex>
+              </Flex>
+          ))}
+        </Space>
   )
 }
 
