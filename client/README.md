@@ -8,19 +8,25 @@ React + Vite single‑page app for browsing blogs, reading posts, commenting, an
 - **Content:** Quill editor, Marked, DOMPurify
 - **Utils:** React Hot Toast, i18next/react-i18next, Moment.js
 
-### Environment
-Copy `.env.example` to `.env` and set:
+### Quick Start
+```bash
+# 1. Copy environment file (already configured for local development)
+cp .env.example .env
 
+# 2. Install dependencies
+npm install
+
+# 3. Start development server (port 5173)
+npm run dev
+```
+
+### Environment
+The `.env` file should contain:
 ```
 VITE_BASE_URL=http://localhost:5001
 ```
 
-### Run
-```
-cd client
-npm install
-npm run dev
-```
+This is already configured in `.env.example` for local development.
 
 For the full feature list and endpoints, see `../server/README.md`.
 

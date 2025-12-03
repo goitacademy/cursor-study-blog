@@ -21,23 +21,30 @@ Express server with blog CRUD, comments, admin auth, local file uploads, and AI 
 
 ### Recommended: Complete Setup
 ```bash
+# 1. Copy environment file (credentials are pre-configured)
+cp .env.example .env
 
+# 2. Install dependencies
 npm install
-npm run setup    # Starts Docker + creates schema + seeds test data
-npm run server   # Start the API server (port 5001)
+
+# 3. Setup database (starts Docker + creates schema + seeds test data)
+npm run setup
+
+# 4. Start the API server (port 5001)
+npm run server
 ```
 
 ### Manual Step-by-Step
 ```bash
-# 1. Install dependencies
-npm install
-
-# 2. Setup environment
+# 1. Setup environment (credentials are pre-configured in .env.example)
 cp .env.example .env
-# Edit .env with your credentials:
+# Optional: Edit .env to customize:
 # - Database credentials (MONGODB_USER, MONGODB_PASSWORD, MONGODB_DATABASE)
-# - JWT secret
-# - Gemini API key (optional)
+# - JWT secret (change in production!)
+# - Gemini API key (optional, for AI content generation)
+
+# 2. Install dependencies
+npm install
 
 # 3. Start MongoDB with Docker (init scripts create schema automatically)
 npm run db:start
@@ -129,20 +136,20 @@ The existing migration files (`20241014000001-add-blog-indexes.js`, etc.) are **
 
 ## 🗄️ View Your Local Database
 
-> **Note:** All credentials are configured in your `.env` file. Default values are `studysprint` / `studysprint123`.
+> **Note:** All credentials are configured in your `.env` file. Check `MONGODB_USER`, `MONGODB_PASSWORD`, and `MONGODB_DATABASE` in your `.env` file for the actual values.
 
 ### Option 1: Mongo Express (Web UI) ✨
 Built-in web interface to view and manage your data:
 1. Start Docker: `npm run db:start`
 2. Open browser: `http://localhost:8081`
-3. Login with your `MONGODB_USER` / `MONGODB_PASSWORD` (default: `studysprint` / `studysprint123`)
+3. Login with your `MONGODB_USER` / `MONGODB_PASSWORD` from `.env`
 4. Browse your data visually
 
 ### Option 2: MongoDB Compass (Desktop App)
 Professional desktop application:
 1. Download: [mongodb.com/compass](https://www.mongodb.com/products/compass)
-2. Connect using your `MONGODB_URI` from `.env` (default: `mongodb://studysprint:studysprint123@localhost:27017`)
-3. View: `studysprint` database
+2. Connect using your `MONGODB_URI` from `.env` (format: `mongodb://USER:PASSWORD@localhost:27017/DATABASE`)
+3. View your database (name matches `MONGODB_DATABASE` from `.env`)
 
 ---
 

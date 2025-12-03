@@ -20,17 +20,15 @@ For the full feature list and API documentation, see [`server/README.md`](server
 See [`server/README.md`](server/README.md) and [`client/README.md`](client/README.md) for detailed steps. Briefly:
 
 **Server**
-- Copy `server/.env.example` to `server/.env` and fill in your credentials:
-  - Database credentials (`MONGODB_USER`, `MONGODB_PASSWORD`, `MONGODB_DATABASE`)
-  - JWT secret (`JWT_SECRET`)
-  - Gemini API key (`GEMINI_API_KEY`) - optional, for AI content generation
-- `cd server && npm install && npm run setup` (starts local MongoDB in Docker + creates schema + seeds test data)
-- `npm run server` (starts API on port 5001)
+1. Copy `server/.env.example` to `server/.env` (credentials are pre-configured, but you can customize them)
+2. `cd server && npm install`
+3. `npm run setup` (starts local MongoDB in Docker + creates schema + seeds test data)
+4. `npm run server` (starts API on port 5001)
 
 **Client**
-- Copy `client/.env.example` to `client/.env` and set:
-  - `VITE_BASE_URL=http://localhost:5001`
-- `cd client && npm install && npm run dev` (starts dev server on port 5173)
+1. Copy `client/.env.example` to `client/.env` (already configured for local development)
+2. `cd client && npm install`
+3. `npm run dev` (starts dev server on port 5173)
 
 **Admin Login** (after seeding)
 - Navigate to `http://localhost:5173/admin`
@@ -40,8 +38,8 @@ See [`server/README.md`](server/README.md) and [`client/README.md`](client/READM
 This project uses a **local MongoDB database** running in Docker (no cloud database needed). The database is automatically set up when you run `npm run setup` in the server directory.
 
 To view your data:
-- **Mongo Express** (Web UI): `http://localhost:8081` (login with your `MONGODB_USER` / `MONGODB_PASSWORD`)
-- **MongoDB Compass** (Desktop): Connect to `mongodb://studysprint:studysprint123@localhost:27017`
+- **Mongo Express** (Web UI): `http://localhost:8081` (login with your `MONGODB_USER` / `MONGODB_PASSWORD` from `server/.env`)
+- **MongoDB Compass** (Desktop): Connect using your `MONGODB_URI` from `server/.env` (format: `mongodb://USER:PASSWORD@localhost:27017/DATABASE`)
 
 ### Environment Variables
 See [`server/README.md`](server/README.md) and [`client/README.md`](client/README.md) for complete environment configuration. Server requires database credentials, `JWT_SECRET`, and optionally `GEMINI_API_KEY`. Client only needs `VITE_BASE_URL`.
