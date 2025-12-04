@@ -8,7 +8,6 @@ import {
   Dashboard,
   AddBlog,
   Articles,
-  Comments,
   Login,
   Register,
   ResetPassword
@@ -70,7 +69,6 @@ function App() {
           <Route index element={<Dashboard />} />
           <Route path='addBlog' element={<AddBlog />} />
           <Route path='articles' element={<Articles />} />
-          <Route path='comments' element={<Comments />} />
         </Route>
       </Routes>
     </ConfigProvider>

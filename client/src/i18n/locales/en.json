@@ -50,7 +50,6 @@
     "readMore": "Read More",
     "publishedOn": "Published on",
     "by": "By",
-    "comments": "Comments",
     "status": {
       "published": "Published",
       "draft": "Draft"
@@ -60,32 +59,17 @@
     "shareTitle": "Share this article on social media",
     "coverAlt": "Article cover"
   },
-  "comment": {
-    "title": "Leave a comment",
-    "description": "Want to share your thoughts or leave a comment? We'd love to hear from you!",
-    "namePlaceholder": "Your name",
-    "contentPlaceholder": "Your comment",
-    "submitButton": "Submit Comment",
-    "noComments": "No comments yet. Be the first!",
-    "alreadyApproved": "Already approved",
-    "approve": "Approve comment",
-    "unapprove": "Unapprove comment",
-    "deleteComment": "Delete comment"
-  },
   "admin": {
     "sidebar": {
       "dashboard": "Dashboard",
       "addArticle": "Add Article",
-      "allArticles": "All Articles",
-      "comments": "Comments"
+      "allArticles": "All Articles"
     },
     "dashboard": {
       "title": "Dashboard",
       "articles": "Articles",
-      "comments": "Comments",
       "drafts": "Drafts",
-      "latestArticles": "Latest Articles",
-      "latestComments": "Latest Comments"
+      "latestArticles": "Latest Articles"
     },
     "addBlog": {
       "title": "Add Article",
@@ -113,20 +97,6 @@
         "blogTitle": "Blog Title",
         "date": "Date",
         "status": "Status",
-        "actions": "Actions",
-        "comments": "Comments"
-      }
-    },
-    "comments": {
-      "title": "Comments",
-      "commentsCount": "Comments:",
-      "sortByArticle": "By Article",
-      "totalComments": "Total {{count}} comments",
-      "columns": {
-        "index": "#",
-        "comment": "Comment",
-        "article": "Article",
-        "author": "Author",
         "actions": "Actions"
       }
     }
@@ -167,7 +137,6 @@
     "confirmPasswordRequired": "Please confirm your password",
     "passwordMismatch": "Passwords do not match",
     "nameRequired": "Please enter your name",
-    "commentRequired": "Please enter your comment",
     "titleRequired": "Please enter article title",
     "subtitleRequired": "Please enter subtitle",
     "categoryRequired": "Please select a category"
@@ -178,10 +147,6 @@
       "blogDeleted": "Blog deleted successfully!",
       "blogPublished": "Blog published successfully",
       "blogUnpublished": "Blog unpublished successfully",
-      "commentAdded": "Comment added successfully!",
-      "commentDeleted": "Comment deleted successfully!",
-      "commentApproved": "Comment approved successfully!",
-      "commentUnapproved": "Comment unapproved successfully!",
       "login": "Login successful!",
       "logout": "Logout successful!"
     },
