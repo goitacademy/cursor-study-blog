@@ -1,0 +1,229 @@
+---
+description: React and frontend development patterns for the StudySprint client
+globs:
+  - client/src/**/*.js
+  - client/src/**/*.jsx
+alwaysApply: false
+---
+
+# Frontend Rules - React & Client Code
+
+## Component Structure
+
+Always use functional components with hooks. Structure in this order:
+
+1. Imports
+2. Main component
+3. Subcomponents (if any)
+4. Helper functions
+5. Constants/static data
+
+```javascript
+import { useState, useEffect } from 'react'
+import { Card, Button } from 'antd'
+import { useApiQuery } from '@/hooks'
+
+// Main component
+function BlogList() {
+  const { data, loading } = useApiQuery(() => api.getBlogs())
+  
+  if (loading) return <LoadingSpinner />
+  
+  return (
+    <div>
+      {data.blogs.map(blog => (
+        <BlogCard key={blog._id} blog={blog} />
+      ))}
+    </div>
+  )
+}
+
+// Subcomponent
+function LoadingSpinner() {
+  return <div>Loading...</div>
+}
+
+export default BlogList
+```
+
+## Use Existing Hooks
+
+**Always use custom hooks from `@/hooks` instead of managing state manually.**
+
+```javascript
+// Good - use existing custom hooks
+import { useBlogs, useCreateBlog } from '@/hooks'
+
+function MyComponent() {
+  const { blogs, loading } = useBlogs()
+  const { createBlog, isCreating } = useCreateBlog()
+}
+
+// Bad - manual API calls and state management
+function MyComponent() {
+  const [blogs, setBlogs] = useState([])
+  const [loading, setLoading] = useState(false)
+  
+  useEffect(() => {
+    fetchBlogs()
+  }, [])
+}
+```
+
+**Available hooks:**
+- `useApiQuery` - for GET requests (auto-fetches on mount)
+- `useApiMutation` - for POST/PUT/DELETE
+- `useBlogs()`, `useBlog(id)`, `useComments(blogId)` - data queries
+- `useCreateBlog()`, `useBlogActions()` - data mutations
+
+## Use Existing API Functions
+
+**Always use API functions from `@/api` instead of direct axios calls.**
+
+```javascript
+// Good
+import { blogApi } from '@/api'
+
+const data = await blogApi.getAll()
+
+// Bad - direct axios calls
+import axios from 'axios'
+
+const data = await axios.get('/api/blog/all')
+```
+
+## Internationalization
+
+**Always use `useTranslation()` - no hardcoded strings.**
+
+```javascript
+import { useTranslation } from 'react-i18next'
+
+function MyComponent() {
+  const { t } = useTranslation()
+  
+  // Good
+  return <Button>{t('common.submit')}</Button>
+  
+  // Bad - hardcoded string
+  return <Button>Submit</Button>
+}
+```
+
+## Forms
+
+Use Ant Design Form component with validation.
+
+```javascript
+import { Form, Input, Button } from 'antd'
+
+function BlogForm() {
+  const [form] = Form.useForm()
+  const { t } = useTranslation()
+  
+  const onFinish = async (values) => {
+    // Handle submission
+  }
+  
+  return (
+    <Form form={form} onFinish={onFinish} layout="vertical">
+      <Form.Item
+        name="title"
+        label={t('admin.addBlog.titleLabel')}
+        rules={[{ required: true, message: t('validation.titleRequired') }]}
+      >
+        <Input />
+      </Form.Item>
+      <Form.Item>
+        <Button type="primary" htmlType="submit">
+          {t('common.submit')}
+        </Button>
+      </Form.Item>
+    </Form>
+  )
+}
+```
+
+## State Management
+
+- **Prefer local state** with `useState`
+- **Lift state up** only when multiple components need it
+- Use **Context** (`useAppContext`) for global state (auth, theme)
+- Use `useCallback` for callbacks passed as props
+- Use `useMemo` for expensive computations
+
+```javascript
+// Good - local state
+function Counter() {
+  const [count, setCount] = useState(0)
+  return <Button onClick={() => setCount(count + 1)}>{count}</Button>
+}
+
+// Good - memoized callback
+const handleDelete = useCallback((id) => {
+  deleteItem(id)
+}, [deleteItem])
+
+// Good - memoized computation
+const sortedBlogs = useMemo(() => {
+  return blogs.sort((a, b) => b.date - a.date)
+}, [blogs])
+```
+
+## Conditional Rendering
+
+Use short-circuit and ternary operators. Avoid complex nested ternaries.
+
+```javascript
+// Good
+{isLoading && <Spinner />}
+{error ? <ErrorMessage /> : <Content />}
+
+// Bad - complex nested ternary
+{isLoading ? <Spinner /> : error ? <ErrorMessage /> : data ? <Content /> : <Empty />}
+```
+
+## useEffect Cleanup
+
+Always provide cleanup functions when needed.
+
+```javascript
+useEffect(() => {
+  const subscription = subscribeToUpdates()
+  
+  // Cleanup function
+  return () => {
+    subscription.unsubscribe()
+  }
+}, [])
+```
+
+## Ant Design Components
+
+Always use Ant Design components. Common ones:
+
+- **Layout**: `Layout`, `Row`, `Col`, `Space`, `Divider`
+- **Display**: `Card`, `Table`, `List`, `Tag`, `Avatar`, `Empty`
+- **Input**: `Form`, `Input`, `Button`, `Select`, `Upload`, `DatePicker`
+- **Feedback**: `message`, `notification`, `Modal`, `Spin`, `Skeleton`
+- **Navigation**: `Menu`, `Tabs`, `Breadcrumb`, `Pagination`
+
+```javascript
+import { Card, Space, Button, Typography, theme } from 'antd'
+
+const { Title, Text } = Typography
+
+function BlogCard({ title, content }) {
+  const { token } = theme.useToken()
+  
+  return (
+    <Card>
+      <Space direction="vertical" size="middle">
+        <Title level={3}>{title}</Title>
+        <Text>{content}</Text>
+        <Button type="primary">Read More</Button>
+      </Space>
+    </Card>
+  )
+}
+```

@@ -1,0 +1,134 @@
+---
+description: Core style and constraints that apply to all code in the project
+alwaysApply: true
+---
+
+# Global Project Rules - StudySprint
+
+## JavaScript Style
+
+- **No semicolons** (unless required to disambiguate)
+- **Single quotes** for strings
+- **2 spaces** for indentation
+- **camelCase** for variables/functions
+- **PascalCase** for React components
+
+```javascript
+// Good
+const fetchBlogData = async () => {
+  const response = await api.getBlogs()
+  return response.data
+}
+
+// Bad - semicolons, double quotes, wrong indentation
+const fetchBlogData = async () => {
+    const response = await api.getBlogs();
+    return response.data;
+};
+```
+
+## Technology Constraints
+
+**Never use:**
+- TypeScript (`.ts`, `.tsx` files)
+- Class components in React
+- CSS-in-JS libraries (styled-components, emotion)
+- Any UI library other than Ant Design
+- Bare color values (hex, rgb, hsl)
+- Bare spacing values (custom px/rem values)
+
+**Always use:**
+- Modern JavaScript (ES6+)
+- Functional React components with hooks
+- Ant Design components exclusively
+- Ant Design theme tokens for all colors and spacing
+
+## Ant Design Theme Tokens
+
+**Critical:** Always use `theme.useToken()` for dynamic values.
+
+```javascript
+import { theme } from 'antd'
+
+function MyComponent() {
+  const { token } = theme.useToken()
+  
+  // Good - using theme tokens
+  return (
+    <div style={{
+      color: token.colorPrimary,
+      backgroundColor: token.colorBgContainer,
+      padding: token.paddingLG,
+      marginBottom: token.marginXL
+    }}>
+      Content
+    </div>
+  )
+}
+
+// Bad - bare color and spacing values
+<div style={{
+  color: '#fa541c',
+  backgroundColor: '#fff',
+  padding: '24px',
+  marginBottom: '32px'
+}}>
+```
+
+## Error Handling
+
+Always use try-catch for async operations with early returns.
+
+```javascript
+// Good
+const handleSubmit = async (data) => {
+  if (!data.title) {
+    toast.error('Title is required')
+    return
+  }
+
+  try {
+    await api.createBlog(data)
+    toast.success('Blog created!')
+  } catch (error) {
+    toast.error(error.message || 'Failed to create blog')
+  }
+}
+
+// Bad - no error handling
+const handleSubmit = async (data) => {
+  await api.createBlog(data)
+}
+```
+
+## Performance
+
+Avoid inline function definitions in JSX to prevent unnecessary re-renders.
+
+```javascript
+// Good - memoized callback
+const handleClick = useCallback(() => {
+  doSomething()
+}, [doSomething])
+
+return <Button onClick={handleClick}>Click</Button>
+
+// Bad - creates new function on every render
+return <Button onClick={() => doSomething()}>Click</Button>
+```
+
+## Import Order
+
+1. External dependencies
+2. Internal utilities/configs
+3. Components
+4. Assets
+
+```javascript
+// Good
+import { useState, useEffect } from 'react'
+import { Button, Card } from 'antd'
+import { useApiQuery } from '@/hooks'
+import { formatDate } from '@/utils/formatters'
+import logo from '@/assets/logo.svg'
+```
