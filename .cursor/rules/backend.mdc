@@ -1,0 +1,412 @@
+---
+description: Express backend patterns for the StudySprint server
+globs:
+  - server/src/**/*.js
+alwaysApply: false
+---
+
+# Backend Rules - Express & Server Code
+
+## Controller Pattern
+
+Always wrap controller functions with `asyncHandler` for automatic error handling.
+
+```javascript
+import { asyncHandler } from '../helpers/asyncHandler.js'
+import Blog from '../models/Blog.js'
+
+// Good
+export const getAllBlogs = asyncHandler(async (req, res) => {
+  const blogs = await Blog.find({ isPublished: true })
+  res.json({
+    success: true,
+    count: blogs.length,
+    blogs
+  })
+})
+
+// Verbose - manual try-catch (repetitive across controllers)
+export const getAllBlogs = async (req, res) => {
+  try {
+    const blogs = await Blog.find({ isPublished: true })
+    res.json({ success: true, blogs })
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message })
+  }
+}
+```
+
+**Why asyncHandler is preferred:**
+- **DRY principle** - Error handling logic is centralized in one place
+- **Consistency** - All errors are handled uniformly across controllers
+- **Less boilerplate** - Eliminates repetitive try-catch blocks
+- **Maintainability** - Changes to error handling only need to be made in `asyncHandler`
+
+## Response Format
+
+**Always use consistent response structure:** `{ success, message, data }`
+
+Use response helpers from `helpers/response.js`:
+
+```javascript
+import { sendSuccess, sendError, sendData } from '../helpers/response.js'
+
+// Good - consistent responses
+export const createBlog = asyncHandler(async (req, res) => {
+  const blog = await Blog.create(req.body)
+  
+  return sendSuccess(res, { blog }, 'Blog created successfully', 201)
+})
+
+export const getBlog = asyncHandler(async (req, res) => {
+  const blog = await Blog.findById(req.params.id)
+  
+  if (!blog) {
+    return sendError(res, 'Blog not found', 404)
+  }
+  
+  return sendData(res, { blog })
+})
+```
+
+## Validation
+
+Validate input at the beginning of functions. Use early returns for errors.
+
+### Basic Field Validation
+
+```javascript
+// Good - validation first, early return
+export const addBlog = asyncHandler(async (req, res) => {
+  const { title, description, category } = req.body
+  const imageFile = req.file
+
+  if (!title || !description || !category || !imageFile) {
+    return res.status(400).json({
+      success: false,
+      message: 'Missing required fields'
+    })
+  }
+
+  const blog = await Blog.create({ title, description, category, image: imageFile.filename })
+  res.status(201).json({ success: true, blog })
+})
+
+// Verbose - validation after processing (inefficient)
+export const addBlog = asyncHandler(async (req, res) => {
+  const blog = await Blog.create(req.body)
+  
+  if (!blog.title) {
+    return res.status(400).json({ success: false })
+  }
+})
+```
+
+### ObjectId Validation
+
+```javascript
+import mongoose from 'mongoose'
+
+export const getBlogById = asyncHandler(async (req, res) => {
+  const { blogId } = req.params
+  
+  if (!mongoose.Types.ObjectId.isValid(blogId)) {
+    return res.status(400).json({ 
+      success: false, 
+      message: 'Invalid blog ID format' 
+    })
+  }
+  
+  const blog = await Blog.findById(blogId)
+  // ... rest of logic
+})
+```
+
+### Enum/Allowed Values Validation
+
+```javascript
+const ALLOWED_CATEGORIES = ['Technology', 'Startup', 'Lifestyle']
+
+export const createBlog = asyncHandler(async (req, res) => {
+  const { category } = req.body
+  
+  if (!ALLOWED_CATEGORIES.includes(category)) {
+    return res.status(400).json({ 
+      success: false, 
+      message: `Category must be one of: ${ALLOWED_CATEGORIES.join(', ')}` 
+    })
+  }
+  
+  // ... create blog
+})
+```
+
+### File Type and Size Validation
+
+```javascript
+const ALLOWED_MIME_TYPES = ['image/jpeg', 'image/png', 'image/webp']
+const MAX_FILE_SIZE = 5 * 1024 * 1024 // 5MB
+
+export const uploadBlogImage = asyncHandler(async (req, res) => {
+  const imageFile = req.file
+  
+  if (!ALLOWED_MIME_TYPES.includes(imageFile.mimetype)) {
+    return res.status(400).json({ 
+      success: false, 
+      message: 'Invalid file type. Allowed: JPEG, PNG, WebP' 
+    })
+  }
+  
+  if (imageFile.size > MAX_FILE_SIZE) {
+    return res.status(400).json({ 
+      success: false, 
+      message: 'File too large (max 5MB)' 
+    })
+  }
+  
+  // ... process upload
+})
+```
+
+### Email Validation
+
+```javascript
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
+export const subscribeNewsletter = asyncHandler(async (req, res) => {
+  const { email } = req.body
+  
+  if (!email || !EMAIL_REGEX.test(email)) {
+    return res.status(400).json({ 
+      success: false, 
+      message: 'Invalid email format' 
+    })
+  }
+  
+  // ... subscribe user
+})
+```
+
+### String Sanitization
+
+```javascript
+export const createBlog = asyncHandler(async (req, res) => {
+  const { title, description } = req.body
+  
+  // Sanitize and limit input
+  const sanitizedTitle = title.trim()
+  const sanitizedDescription = description.trim().slice(0, 5000)
+  
+  if (sanitizedTitle.length < 3) {
+    return res.status(400).json({ 
+      success: false, 
+      message: 'Title must be at least 3 characters' 
+    })
+  }
+  
+  const blog = await Blog.create({ 
+    title: sanitizedTitle, 
+    description: sanitizedDescription 
+  })
+  // ...
+})
+```
+
+### Conditional Validation
+
+```javascript
+export const publishBlog = asyncHandler(async (req, res) => {
+  const { blogId } = req.body
+  const blog = await Blog.findById(blogId)
+  
+  if (!blog) {
+    return res.status(404).json({ success: false, message: 'Blog not found' })
+  }
+  
+  // Conditional business logic validation
+  if (!blog.isReviewed) {
+    return res.status(400).json({ 
+      success: false, 
+      message: 'Blog must be reviewed before publishing' 
+    })
+  }
+  
+  if (!blog.image) {
+    return res.status(400).json({ 
+      success: false, 
+      message: 'Blog must have an image to be published' 
+    })
+  }
+  
+  blog.isPublished = true
+  await blog.save()
+  // ...
+})
+```
+
+**See also:** Check `validators/blogValidator.js` for real-world examples of validation middleware in this codebase.
+
+## Middleware Validators
+
+Use validators as middleware instead of inline validation.
+
+```javascript
+// validators/blogValidator.js
+export const validateBlogInput = (req, res, next) => {
+  const { title, description, category } = req.body.blog ? JSON.parse(req.body.blog) : {}
+  const errors = []
+
+  if (!title || title.trim().length < 3) {
+    errors.push('Title must be at least 3 characters')
+  }
+  
+  if (errors.length > 0) {
+    return res.status(400).json({
+      success: false,
+      message: 'Validation failed',
+      errors
+    })
+  }
+
+  next()
+}
+```
+
+## Route Organization
+
+Organize routes: public first, then apply auth middleware, then protected routes.
+
+```javascript
+import express from 'express'
+import { 
+  addBlog, 
+  deleteBlogById, 
+  getAllBlogs, 
+  getBlogById, 
+  publishBlog,
+  unpublishBlog 
+} from '../controllers/blogController.js'
+import upload from '../middleware/multer.js'
+import auth from '../middleware/auth.js'
+import { validateBlogInput } from '../validators/blogValidator.js'
+
+const router = express.Router()
+
+// Public routes (before auth middleware)
+router.get('/all', getAllBlogs)
+router.get('/:blogId', getBlogById)
+
+// Apply auth middleware - all routes below are protected
+router.use(auth)
+
+// Protected routes (after auth middleware)
+router.post('/add', upload.single('image'), validateBlogInput, addBlog)
+router.post('/delete', deleteBlogById)
+router.post('/publish', publishBlog)
+router.post('/unpublish', unpublishBlog)
+
+export default router
+```
+
+## Apply Rate Limiters
+
+Use rate limiters for sensitive endpoints.
+
+```javascript
+import { commentLimiter, generateLimiter } from '../middleware/rateLimiter.js'
+
+// Rate limited routes
+router.post('/add-comment', commentLimiter, validateComment, addComment)
+router.post('/generate', generateLimiter, generateContent)
+```
+
+## HTTP Status Codes
+
+Use appropriate status codes:
+
+- **200** - Success (GET, PUT)
+- **201** - Created (POST)
+- **400** - Bad Request (validation errors)
+- **401** - Unauthorized (no/invalid token)
+- **404** - Not Found
+- **500** - Internal Server Error
+
+```javascript
+// Good - appropriate status codes
+export const createBlog = asyncHandler(async (req, res) => {
+  const blog = await Blog.create(req.body)
+  res.status(201).json({ success: true, blog })  // 201 for creation
+})
+
+export const getBlog = asyncHandler(async (req, res) => {
+  const blog = await Blog.findById(req.params.id)
+  
+  if (!blog) {
+    return res.status(404).json({ success: false, message: 'Not found' })  // 404
+  }
+  
+  res.json({ success: true, blog })  // 200 (default)
+})
+```
+
+## Mongoose Models
+
+Use consistent schema patterns with timestamps.
+
+```javascript
+import mongoose from 'mongoose'
+
+const blogSchema = new mongoose.Schema({
+  title: { type: String, required: true },
+  description: { type: String, required: true },
+  category: { type: String, required: true },
+  author: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  isPublished: { type: Boolean, default: false }
+}, { timestamps: true })  // Always include timestamps
+
+const Blog = mongoose.model('Blog', blogSchema)
+
+export default Blog
+```
+
+## Authentication Middleware
+
+Access authenticated user data via `req.user` (set by auth middleware).
+
+```javascript
+// middleware/auth.js sets req.user
+export const createBlog = asyncHandler(async (req, res) => {
+  const blog = await Blog.create({
+    ...req.body,
+    author: req.user.userId,      // From auth middleware
+    authorName: req.user.name     // From auth middleware
+  })
+  
+  res.status(201).json({ success: true, blog })
+})
+```
+
+## File Upload
+
+Use Multer middleware for file uploads. Store files locally.
+
+```javascript
+import upload from '../middleware/multer.js'
+
+// Route with file upload
+router.post('/add', upload.single('image'), validateBlogInput, addBlog)
+
+// Controller handling upload
+export const addBlog = asyncHandler(async (req, res) => {
+  const imageFile = req.file  // Multer adds this
+  
+  if (!imageFile) {
+    return res.status(400).json({ success: false, message: 'Image required' })
+  }
+  
+  const imagePath = `/uploads/blogs/${imageFile.filename}`
+  const blog = await Blog.create({ ...req.body, image: imagePath })
+  
+  res.status(201).json({ success: true, blog })
+})
+```
