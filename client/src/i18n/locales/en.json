@@ -167,10 +167,20 @@
     "confirmPasswordRequired": "Please confirm your password",
     "passwordMismatch": "Passwords do not match",
     "nameRequired": "Please enter your name",
+    "nameMin": "Name must be at least 2 characters",
+    "nameMax": "Name cannot exceed 50 characters",
     "commentRequired": "Please enter your comment",
+    "commentMin": "Comment must be at least 10 characters",
+    "commentMax": "Comment cannot exceed 650 characters",
     "titleRequired": "Please enter article title",
+    "titleMin": "Title must be at least 5 characters",
+    "titleMax": "Title cannot exceed 200 characters",
     "subtitleRequired": "Please enter subtitle",
-    "categoryRequired": "Please select a category"
+    "subtitleMin": "Subtitle must be at least 10 characters",
+    "subtitleMax": "Subtitle cannot exceed 300 characters",
+    "categoryRequired": "Please select a category",
+    "descriptionRequired": "Article content is required",
+    "imageRequired": "Thumbnail image is required"
   },
   "messages": {
     "success": {

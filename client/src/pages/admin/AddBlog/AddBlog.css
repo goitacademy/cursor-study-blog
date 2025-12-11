@@ -16,8 +16,65 @@
   max-width: 600px;
 }
 
+.admin-add-blog-form .ant-form-item {
+  margin-bottom: var(--ant-margin-xl);
+}
+
+.admin-add-blog-form .ant-form-item-label {
+  padding-bottom: var(--ant-padding-sm);
+  margin-bottom: 0;
+}
+
 .admin-add-blog-form .ant-form-item-label > label {
   color: var(--ant-color-text);
+  font-size: 18px;
+  font-weight: 500;
+  height: auto;
+  line-height: 1.4;
+}
+
+.admin-add-blog-form .ant-form-item-label > label::before {
+  display: none !important;
+}
+
+.admin-add-blog-form .ant-form-item-label > label::after {
+  display: none !important;
+}
+
+.admin-add-blog-form .ant-form-item-control {
+  margin-top: var(--ant-margin-xs);
+}
+
+.admin-add-blog-form .ant-input,
+.admin-add-blog-form .ant-select-selector {
+  border-radius: var(--ant-border-radius-lg);
+  border-color: var(--ant-color-border);
+  font-size: 16px;
+  padding: var(--ant-padding-sm) var(--ant-padding);
+}
+
+.admin-add-blog-form .ant-input {
+  height: 48px;
+}
+
+.admin-add-blog-form .ant-select-single .ant-select-selector {
+  height: 48px;
+  padding: var(--ant-padding-xs) var(--ant-padding);
+}
+
+.admin-add-blog-form .ant-select-single .ant-select-selector .ant-select-selection-item,
+.admin-add-blog-form .ant-select-single .ant-select-selector .ant-select-selection-placeholder {
+  line-height: 46px;
+}
+
+.admin-add-blog-form .ant-input::placeholder,
+.admin-add-blog-form .ant-select-selection-placeholder {
+  color: var(--ant-color-text-tertiary);
+}
+
+.admin-add-blog-form .ant-form-item-explain-error {
+  font-size: 14px;
+  margin-top: var(--ant-margin-xs);
 }
 
 /* Upload thumbnail styling */
