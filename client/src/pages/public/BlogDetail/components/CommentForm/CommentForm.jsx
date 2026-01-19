@@ -91,6 +91,7 @@ function CommentForm({ onSubmit, loading = false }) {
             type="primary"
             htmlType="submit"
             loading={loading || submitting}
+            disabled={loading || submitting}
             size="large"
             style={{
               borderRadius: token.borderRadiusLG

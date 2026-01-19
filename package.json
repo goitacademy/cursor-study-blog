@@ -1,0 +1,24 @@
+{
+  "name": "cursor-study-blog",
+  "version": "1.0.0",
+  "description": "StudySprint is a simple full‑stack blog demo used to showcase Cursor's capabilities in web development. It includes a React + Vite client and an Express + MongoDB server, with local file storage for images and Google Gemini for optional AI‑assisted content generation.",
+  "main": "index.js",
+  "scripts": {
+    "test": "cd client && npm test -- --run",
+    "prepare": "husky"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/goitacademy/cursor-study-blog.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/goitacademy/cursor-study-blog/issues"
+  },
+  "homepage": "https://github.com/goitacademy/cursor-study-blog#readme",
+  "devDependencies": {
+    "husky": "^9.1.7"
+  }
+}

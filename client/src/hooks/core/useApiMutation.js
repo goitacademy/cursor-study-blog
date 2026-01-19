@@ -27,10 +27,10 @@ export function useApiMutation(options = {}) {
       }
     }
 
+    setLoading(true)
+    setError(null)
+    
     try {
-      setLoading(true)
-      setError(null)
-      
       const { data } = await apiCall()
       
       if (data.success) {
@@ -42,10 +42,12 @@ export function useApiMutation(options = {}) {
           await onSuccess(data)
         }
         
+        setLoading(false)
         return { success: true, data }
       } else {
         const errMsg = data.message || errorMessage
         setError(errMsg)
+        setLoading(false)
         
         if (showErrorToast) {
           toast.error(errMsg)
@@ -60,6 +62,7 @@ export function useApiMutation(options = {}) {
     } catch (err) {
       const errMsg = err.response?.data?.message || err.message || errorMessage
       setError(errMsg)
+      setLoading(false)
       
       if (showErrorToast) {
         toast.error(errMsg)
@@ -70,8 +73,6 @@ export function useApiMutation(options = {}) {
       }
       
       return { success: false, message: errMsg }
-    } finally {
-      setLoading(false)
     }
   }, [showToast])
 
