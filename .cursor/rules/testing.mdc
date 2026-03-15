@@ -1,0 +1,34 @@
+---
+description: Testing and quality guidelines for client and server.
+globs: ["client/src/**/*", "server/src/**/*"]
+alwaysApply: false
+---
+
+## Current state
+
+- The project currently has no automated tests configured.
+- When introducing tests, prefer lightweight, well-supported tools for the existing stack.
+
+## Recommended tooling
+
+- **Client (React/Vite)**:
+  - Use **Vitest** as the test runner.
+  - Use **React Testing Library** for component tests.
+- **Server (Express/Mongoose)**:
+  - Use **Vitest** or **Jest** for unit and integration tests.
+  - Use **Supertest** for HTTP-level tests of Express routes.
+
+## Structure and naming
+
+- Keep tests close to the code they cover using either:
+  - `__tests__` folders inside feature folders, or
+  - `*.test.js` / `*.test.jsx` files next to the implementation files.
+- Name tests to match the module or component under test (for example `Home.test.jsx`, `blogController.test.js`).
+
+## Guidelines for new tests (once tools exist)
+
+- For new **critical flows** (authentication, blog creation, comment posting, AI content generation), add at least one test that covers the happy path.
+- Prefer testing behavior and user-visible outcomes over implementation details:
+  - For React components, assert on rendered output and interactions.
+  - For Express routes, assert on HTTP status codes and JSON response shapes (including `success` and `message`).
+

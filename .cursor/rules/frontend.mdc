@@ -1,0 +1,46 @@
+---
+description: Frontend rules for the React/Vite client.
+globs: ["client/src/**/*.js", "client/src/**/*.jsx"]
+alwaysApply: false
+---
+
+## Naming and files
+
+- React components use **PascalCase** filenames and exports, for example `Home.jsx`, `BlogDetail.jsx`, `AdminLayout.jsx`.
+- Hooks use **camelCase** and start with `use`, for example `useBlog`, `useBlogs`, `useBlogActions`, `useApiQuery`, `useApiMutation`.
+- Place CSS files next to their component with the same basename, for example `Comments.jsx` + `Comments.css`.
+
+## Imports and aliases
+
+- Prefer the `@/` alias from `vite.config.js` for internal imports (for example `@/pages/Home/Home.jsx`, `@/hooks/api/queries/useBlogs.js`) instead of deep `../../..` paths.
+- Order imports with libraries first (`react`, `react-router-dom`, `antd`, etc.), then local modules.
+
+## Data fetching and mutations
+
+- Components **must not call `axios` directly**.
+- For new data flows:
+  1. Add a method to the appropriate API module in `client/src/api` (for example `blogApi`, `commentApi`, `adminApi`).
+  2. Wrap it in a query or mutation hook under `client/src/hooks/api/queries` or `client/src/hooks/api/mutations` using `useApiQuery` or `useApiMutation`.
+  3. Use those hooks in components instead of calling the API modules or `axios` directly.
+- Use the existing `useApiQuery` and `useApiMutation` patterns so that success and error handling (including `react-hot-toast` notifications) stays consistent.
+
+## State and context
+
+- Use `AppContext` from `client/src/context/AppContext.jsx` for cross-cutting concerns such as:
+  - Auth token and its setter.
+  - Shared blog cache and global fetch functions.
+  - Shared search input value.
+- Do not put feature-local component state into `AppContext`; keep it in local component state or feature-specific hooks.
+
+## Routing and navigation
+
+- Define route paths in `client/src/constants/routes.js` and use those constants in `App.jsx`, links, and navigation helpers instead of hard-coded strings.
+- Follow the existing pattern in `client/src/App.jsx` for:
+  - Public routes (`/`, blog detail, authentication pages).
+  - Admin routes nested under `/admin`, guarded by the presence of a valid token.
+
+## UX and messages
+
+- Use shared message constants from `client/src/constants/messages.js` (or similar constants files) for user-facing text in hooks and shared logic.
+- Network errors and successes should go through the existing hooks’ handlers and display notifications with `react-hot-toast`; avoid adding ad-hoc notification patterns in components.
+

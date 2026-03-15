@@ -1,0 +1,36 @@
+---
+description: General stack and global conventions for the study blog project.
+globs: ["**/*"]
+alwaysApply: true
+---
+
+## Stack
+
+- React 19 + Vite with React Router 7 and Ant Design on the client.
+- Express 5 + Mongoose 8 + MongoDB on the server.
+- Google GenAI (`@google/genai`) for AI-powered blog content generation.
+
+## Code style
+
+- **Indentation**: 2 spaces.
+- **Strings**: single quotes.
+- **Semicolons**: follow the style of the edited file; do not reformat entire files just to change semicolon usage.
+- **Language**: JavaScript-first (no TypeScript yet). JSDoc can be used for complex contracts when helpful.
+
+## Project structure
+
+- Prefer **small, focused modules** and **feature-based folders**, following existing patterns:
+  - Client pages, components, and hooks under `client/src/pages`, `client/src/components`, and `client/src/hooks`.
+  - Server routes, controllers, models, middleware, and helpers under `server/src/routes`, `server/src/controllers`, `server/src/models`, `server/src/middleware`, and `server/src/helpers`.
+- When adding new features, mirror existing layouts instead of inventing new top-level folders.
+
+## API response contract
+
+- All HTTP API responses must be JSON with at least:
+  - `success`: boolean
+  - `message`: string
+  - Additional data fields as needed (for example, `blogs`, `blog`, `comments`, `dashboard`).
+- Do not change this contract without updating both:
+  - Server controllers returning the data.
+  - Client API modules and hooks consuming the data.
+

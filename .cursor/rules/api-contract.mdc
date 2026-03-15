@@ -1,0 +1,51 @@
+---
+description: Shared API contract between client and server.
+globs: ["server/src/**/*.js", "client/src/hooks/**/*.js", "client/src/api/**/*.js"]
+alwaysApply: false
+---
+
+## Response shape
+
+- All API responses must be JSON objects with at least:
+  - `success`: boolean
+  - `message`: string
+  - Additional data fields as needed, for example:
+    - `blogs`, `blog`
+    - `comments`, `comment`
+    - `dashboard`
+- Error responses (including validation errors, 401/403, and 404) must also follow this shape with `success: false`.
+
+## Server responsibilities
+
+- Controllers and middleware should:
+  - Return appropriate HTTP status codes (for example `200`, `201`, `400`, `401`, `403`, `404`, `500`).
+  - Include clear, user-facing `message` strings that the client can show directly.
+  - Use consistent data key names that match client expectations (`blogs`, `comments`, etc.).
+- When changing the response structure of an endpoint, update:
+  - The corresponding controller or middleware.
+  - Any fixtures or seed data that rely on that shape.
+
+## Client responsibilities
+
+- Client API modules in `client/src/api` and hooks in `client/src/hooks/api` should:
+  - Always read `response.data.success` and `response.data.message`.
+  - Treat any `success: false` as an error, show the message via `react-hot-toast`, and set error state.
+  - Safely access optional fields using null checks (for example `data?.blogs || []`).
+- When an endpoint’s response shape changes, update:
+  - The API method in the appropriate `*Api` module.
+  - The related query or mutation hook.
+  - Components only as needed, keeping data-shape logic inside hooks when possible.
+
+## Architecture overview
+
+```mermaid
+flowchart LR
+  userBrowser[UserBrowser] --> clientReact[ClientReact]
+  clientReact --> hooksLayer[HooksLayer]
+  hooksLayer --> apiLayer[ApiLayer]
+  apiLayer --> expressServer[ExpressServer]
+  expressServer --> controllers[Controllers]
+  controllers --> middlewareChain[MiddlewareChain]
+  middlewareChain --> mongoDb[MongoDB]
+```
+

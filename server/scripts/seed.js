@@ -166,9 +166,17 @@ const runSeed = async () => {
   process.exit(0)
 }
 
-// Execute if run directly
-if (import.meta.url === `file://${process.argv[1]}`) {
-  runSeed()
-}
+// Execute if run directly (Windows-safe)
+const isDirectExecution = (() => {
+  try {
+    const thisFilePath = path.resolve(fileURLToPath(import.meta.url))
+    const invokedPath = process.argv[1] ? path.resolve(process.argv[1]) : ''
+    return thisFilePath === invokedPath
+  } catch {
+    return false
+  }
+})()
+
+if (isDirectExecution) runSeed()
 
 export default runSeed

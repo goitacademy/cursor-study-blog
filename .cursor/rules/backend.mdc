@@ -1,0 +1,41 @@
+---
+description: Backend rules for the Express/Mongoose server.
+globs: ["server/src/**/*.js", "server/*.js"]
+alwaysApply: false
+---
+
+## Layering and structure
+
+- Follow the pattern: **route → validation middleware → auth and rate limiting → controller → model**.
+- Place new code in the existing folders:
+  - Routes in `server/src/routes`.
+  - Controllers in `server/src/controllers`.
+  - Models in `server/src/models`.
+  - Middleware in `server/src/middleware`.
+  - Helpers and utilities in `server/src/helpers` and `server/src/utils`.
+- Wrap all asynchronous controllers with `asyncHandler` from `server/src/helpers/asyncHandler.js` so errors are passed to the global error handler.
+
+## Validation
+
+- Perform request validation in dedicated middleware modules (for example `validateBlogInput`, `validateComment`) instead of inline in controllers.
+- Validation failures should:
+  - Use appropriate HTTP status codes (typically `400`).
+  - Return JSON in the form `{ success: false, message, errors? }`.
+
+## Responses and error shape
+
+- All responses, including errors and 404s, must follow the JSON shape `{ success, message, ... }`.
+- Prefer using shared helpers from `server/src/helpers/response.js` where appropriate to keep response structure consistent.
+- Error messages should align with constants defined in `server/src/constants/messages.js` (or similar) instead of repeating hard-coded strings.
+
+## Auth and security
+
+- In routers, define public routes first, then use `router.use(auth)` to guard all subsequent protected routes, following the pattern in `server/src/routes/blogRoutes.js`.
+- For write-heavy or expensive endpoints (for example comments or AI-powered content generation), attach specialized rate limiters from `server/src/middleware/rateLimiter.js` in addition to the general `/api` limiter.
+- Do not log secrets or full JWTs in HTTP or DB logs; logs should only contain high-level messages and identifiers.
+
+## File uploads and images
+
+- Use the existing `multer` configuration for uploads (for example blog images) and reuse helpers such as `transformBlogImage`, `transformBlogsImages`, and `deleteImageFile` for any new upload types.
+- When deleting resources that own uploaded files, also remove the associated files and any dependent data (for example comments) to keep the system consistent.
+

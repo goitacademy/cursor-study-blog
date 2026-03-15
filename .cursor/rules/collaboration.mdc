@@ -1,0 +1,26 @@
+---
+description: Collaboration, environment, and AI-usage guidelines.
+globs: ["**/*"]
+alwaysApply: false
+---
+
+## Environment variables
+
+- Any new environment variable must be added to both:
+  - `client/.env.example`
+  - `server/.env.example`
+- Do not hard-code secrets or sensitive values in code; use `process.env` and document required keys in the example files.
+
+## Git and generated files
+
+- Group related client and server changes into the same commit when they implement one feature (for example a new endpoint plus its frontend hook and UI).
+- Do not commit logs or uploaded files; extend `.gitignore` if new generated paths are introduced.
+
+## Using AI (Cursor) in this project
+
+- Prefer existing patterns when adding new code:
+  - Client: follow the hooks and API layers in `client/src/hooks` and `client/src/api`.
+  - Server: follow the route, controller, and middleware structure in `server/src/routes` and `server/src/controllers`.
+- Do not introduce new major libraries (for example alternative UI kits, state managers, or HTTP clients) without explicit approval.
+- When modifying existing files, keep the surrounding style (formatting, imports, semicolons) consistent with the file rather than reformatting everything.
+
