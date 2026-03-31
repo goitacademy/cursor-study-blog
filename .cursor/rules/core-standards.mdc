@@ -1,0 +1,23 @@
+---
+description: Core coding and collaboration standards for this repo
+alwaysApply: true
+---
+
+# Core Standards
+
+- **Style & consistency**
+  - Prefer clear, descriptive names over abbreviations.
+  - Keep functions and components focused; extract helpers when logic grows.
+  - Avoid unnecessary comments; comments should explain why, not what.
+
+- **Nullability & errors**
+  - Narrow null and undefined as early as possible instead of relying on deep optional chains.
+  - Fail fast with helpful errors and messages; avoid swallowing errors silently.
+
+- **Testing & safety**
+  - When changing core logic, prefer adding or updating tests rather than doing manual-only verification.
+  - Log in a structured, consistent way on the server; avoid noisy console logging in committed code.
+
+- **Project hygiene**
+  - Do not commit generated files, local logs, or environment secrets.
+  - Keep TODO notes actionable and dated, or create an issue instead.

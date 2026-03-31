@@ -1,0 +1,17 @@
+---
+description: Backend behavior rules for Express API and services
+globs: server/src/**/*.{js,ts}
+alwaysApply: false
+---
+
+## Backend Rules
+
+- **Error handling**
+  - Wrap new async route handlers and controllers with `asyncHandler` from `server/src/helpers/asyncHandler.js` so errors reach the global `errorHandler`.
+
+- **Routing vs. business logic**
+  - Keep route files (in `server/src/routes`) focused on wiring paths, middleware, and controller functions; put business logic in controllers, helpers, or validators instead of inline in route definitions.
+
+- **Validation & payload parsing**
+  - Parse and validate complex payloads (such as JSON embedded in multipart forms) once in middleware/validators (e.g. `server/src/validators/blogValidator.js`) and pass the shaped data through `req` rather than re-parsing in controllers.
+

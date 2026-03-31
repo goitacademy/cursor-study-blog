@@ -1,0 +1,19 @@
+---
+description: Client networking and side-effect conventions
+globs: client/src/**/*.{js,jsx,ts,tsx}
+alwaysApply: false
+---
+
+# Client Networking
+
+- **HTTP calls**
+  - Centralize HTTP client configuration (base URL, interceptors, auth headers) instead of scattering raw fetch or axios calls.
+  - Wrap raw responses in helper functions that validate and shape data before components use it.
+
+- **Error handling**
+  - Surface user-facing errors with clear, friendly messages, avoiding direct exposure of raw server error text.
+  - Log unexpected errors in a way that is easy to trace, for example tagged with the feature or component name.
+
+- **Side effects in hooks**
+  - Keep useEffect dependency arrays correct and explicit; do not disable lint rules to silence dependency warnings.
+  - Prefer custom hooks for reusable side-effect patterns such as data fetching, subscriptions, and timers.

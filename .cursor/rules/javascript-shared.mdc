@@ -1,0 +1,19 @@
+---
+description: Shared JavaScript and TypeScript conventions for client and server
+globs: "{client,server}/**/*.{js,jsx,ts,tsx}"
+alwaysApply: false
+---
+
+# Shared JavaScript/TypeScript Conventions
+
+- **Types and safety**
+  - Avoid using any unless absolutely necessary and documented; prefer explicit types or unknown with narrowing.
+  - Make return types explicit for exported functions that form part of a public API.
+
+- **Objects and enums**
+  - Prefer object literals with as const or union types instead of enums for simple sets of string values.
+  - Centralize shared domain constants and types (such as statuses and roles) to avoid scattered ad-hoc strings.
+
+- **Utilities and reuse**
+  - Extract commonly reused helper functions and small utilities into shared modules and import from there.
+  - Keep utility modules free of side effects so they are safe to reuse across client and server when appropriate.

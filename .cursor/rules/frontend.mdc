@@ -1,0 +1,18 @@
+---
+description: Frontend-specific behavior rules for React client
+globs: client/src/**/*.{js,jsx,ts,tsx}
+alwaysApply: false
+---
+
+## Frontend Rules
+
+- **HTTP & data fetching**
+  - Use `axios` from `client/src/api/axiosConfig.js` and API modules in `client/src/api` instead of creating new raw `fetch`/`axios` calls in components or pages.
+  - Prefer `useApiQuery`, `useApiMutation`, or `useApiRequest` from `client/src/hooks/core` for new async flows instead of hand-rolled loading/error state.
+
+- **Debugging & logging**
+  - Do not leave `console.log` / `console.debug` in committed client code; rely on hook `error` state and `react-hot-toast` for user-visible feedback.
+
+- **React hooks**
+  - Do not add new `// eslint-disable-next-line react-hooks/exhaustive-deps` comments; fix the dependency array or extract logic into a custom hook instead.
+

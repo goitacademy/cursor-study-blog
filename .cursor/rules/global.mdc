@@ -1,0 +1,15 @@
+---
+description: Cross-cutting guardrails that prevent noisy diffs and fragile patterns
+globs: "{client,server}/**/*.{js,jsx,ts,tsx}"
+alwaysApply: false
+---
+
+## Global Guardrails
+
+- **Lint pragmas**
+  - Do not add `eslint-disable` comments in new code; fix the underlying issue instead.
+  - When you must keep an existing `eslint-disable`, include a short rationale and a dated `TODO` in the same block.
+
+?- **Debug output**
+  - Avoid adding new `console.log` / `console.debug` for ad-hoc debugging; prefer existing logging utilities or temporary breakpoints.
+

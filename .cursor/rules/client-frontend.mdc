@@ -1,0 +1,24 @@
+---
+description: Frontend patterns for the client application
+globs: client/src/**/*.{js,jsx,ts,tsx}
+alwaysApply: false
+---
+
+# Client Frontend Patterns
+
+- **React components**
+  - Use functional components with hooks; avoid introducing new class components.
+  - Keep components presentational when possible; extract data-fetching and side effects into hooks.
+  - Co-locate component, styles, and tests in the same folder when it improves discoverability.
+
+- **State & data**
+  - Prefer local state for view-only concerns; use shared state (context or other store) only for true cross-cutting data.
+  - Normalize API responses before storing them; avoid mirroring backend-shaped nested objects directly in UI state.
+
+- **UI & UX**
+  - Ensure all interactive elements are keyboard accessible and have discernible labels.
+  - Handle loading, empty, and error states explicitly for any asynchronous UI.
+
+- **Imports & structure**
+  - Group imports by external libraries, shared internal modules, and local components, and keep them sorted for readability.
+  - Prefer stable import paths over long chains of relative segments.

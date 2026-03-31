@@ -1,0 +1,23 @@
+---
+description: Backend and API conventions for the server
+globs: server/src/**/*.{js,ts}
+alwaysApply: false
+---
+
+# Server Backend Patterns
+
+- **Architecture**
+  - Separate routing, controllers or handlers, business logic, and persistence concerns instead of placing all logic in route files.
+  - Keep modules single-purpose; extract shared utilities rather than duplicating logic between handlers.
+
+- **Error handling & logging**
+  - Use a centralized error-handling layer; avoid sending raw stack traces or internal error details to clients.
+  - Log with useful context such as route, user or request identifiers when available, and avoid noisy debug logs in committed code.
+
+- **HTTP & API design**
+  - Use consistent status codes and response shapes across endpoints.
+  - Validate and sanitize all inputs at the boundary layer using validators or schemas.
+
+- **Data & time**
+  - Normalize dates and timezones at the boundary, typically using UTC internally.
+  - Treat database operations as fallible and handle not-found and constraint errors explicitly.
