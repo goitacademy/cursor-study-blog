@@ -1,0 +1,12 @@
+---
+description: CORS, rate limits, uploads, and secrets on the Express server
+globs: server/**/*.js
+alwaysApply: false
+---
+
+# Server security
+
+- Do not weaken **[server/server.js](server/server.js)** without explicit approval: CORS allowlist (`CLIENT_URL` + dev origins), **Helmet** (as configured), **`/api` rate limiting** via [server/src/middleware/rateLimiter.js](server/src/middleware/rateLimiter.js), JSON body size limit.
+- **Secrets:** API keys (e.g. Gemini) and `JWT_SECRET` only via `process.env`; see [server/src/configs/gemini.js](server/src/configs/gemini.js) pattern — never hardcode keys.
+- **Uploads:** follow existing **multer** setup under [server/src/middleware/multer.js](server/src/middleware/multer.js) and `uploads/`; validate required files like blog flows.
+- **Mongo:** avoid passing unsanitized user input as raw query operators; the project depends on `express-mongo-sanitize` — do not suggest removing security-related dependencies to “simplify” unless the user explicitly asks.

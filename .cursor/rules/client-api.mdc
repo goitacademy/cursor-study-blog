@@ -1,0 +1,13 @@
+---
+description: Axios instance, auth, FormData, and API response shape
+globs:
+  - client/src/api/**/*.js
+  - client/src/hooks/**/*.js
+alwaysApply: false
+---
+
+# Client API layer
+
+- Use the shared axios instance from [client/src/api/axiosConfig.js](client/src/api/axiosConfig.js): `withCredentials: true`, **Bearer** token from `localStorage`, and **do not** set `Content-Type: application/json` when `config.data` is **FormData** (browser must set multipart boundary).
+- Assume JSON responses follow `{ success, message, ... }` aligned with the server and with [client/src/hooks/core/useApiRequest.js](client/src/hooks/core/useApiRequest.js) / [useApiQuery.js](client/src/hooks/core/useApiQuery.js).
+- Mirror naming and patterns in [client/src/api/blogApi.js](client/src/api/blogApi.js), [adminApi.js](client/src/api/adminApi.js), [commentApi.js](client/src/api/commentApi.js) for new resources.

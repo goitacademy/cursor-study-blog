@@ -1,0 +1,13 @@
+---
+description: Express controllers, validation, Mongoose, and JSON responses
+globs: server/**/*.js
+alwaysApply: false
+---
+
+# Server API conventions
+
+- Wrap async route handlers with **`asyncHandler`** from [server/src/helpers/asyncHandler.js](server/src/helpers/asyncHandler.js) so errors reach [server/src/middleware/errorHandler.js](server/src/middleware/errorHandler.js).
+- Prefer **`sendSuccess` / `sendError` / `sendData`** from [server/src/helpers/response.js](server/src/helpers/response.js). If you inline `res.status().json()`, keep the same shape: `{ success: true|false, message, ... }`.
+- Validation: middleware in [server/src/validators/](server/src/validators/) returning `400` with `{ success: false, message: 'Validation failed', errors: [...] }` when invalid.
+- Protected routes: [server/src/middleware/auth.js](server/src/middleware/auth.js); use `req.user` as set by JWT payload.
+- New persistence or indexes: follow [server/src/models/](server/src/models/) patterns; schema/index changes → **migrate-mongo** under [server/migrations/](server/migrations/) (`npm run migrate:create` / `migrate:up` from `server/`).

@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   mongodb:
-    image: mongo:7.0
+    image: mongo:6.0
     container_name: studysprint-mongodb
     restart: unless-stopped
     environment:

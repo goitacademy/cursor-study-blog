@@ -5,8 +5,8 @@
   "main": "server.js",
   "type": "module",
   "scripts": {
-    "server": "NODE_ENV=development nodemon server.js",
-    "start": "NODE_ENV=production node server.js",
+    "server": "cross-env NODE_ENV=development nodemon server.js",
+    "start": "cross-env NODE_ENV=production node server.js",
     "db:start": "docker-compose up -d",
     "db:stop": "docker-compose down",
     "db:restart": "docker-compose restart",
@@ -16,8 +16,8 @@
     "migrate:up": "migrate-mongo up -f migrations/migrate-mongo-config.cjs",
     "migrate:down": "migrate-mongo down -f migrations/migrate-mongo-config.cjs",
     "migrate:create": "migrate-mongo create -f migrations/migrate-mongo-config.cjs",
-    "seed": "NODE_ENV=development node scripts/seed.js",
-    "setup": "npm run db:start && sleep 5 && npm run seed",
+    "seed": "cross-env NODE_ENV=development node scripts/seed.js",
+    "setup": "npm run db:start && node -e \"setTimeout(() => process.exit(0), 5000)\" && npm run seed",
     "dev": "npm run db:start && npm run server"
   },
   "keywords": [],
@@ -37,6 +37,7 @@
     "multer": "^2.0.0"
   },
   "devDependencies": {
+    "cross-env": "^10.1.0",
     "migrate-mongo": "^11.0.0",
     "nodemon": "^3.1.10"
   }
