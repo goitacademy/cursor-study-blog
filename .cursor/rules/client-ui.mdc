@@ -1,0 +1,15 @@
+---
+description: React, Ant Design, i18n, and safe HTML in the Vite client
+globs:
+  - client/**/*.js
+  - client/**/*.jsx
+alwaysApply: false
+---
+
+# Client UI (React + Ant Design)
+
+- Use **functional components**. Match existing structure: `client/src/pages/` (public vs admin), colocated `components/`, barrel `index.js` where already used.
+- Styling: prefer **Ant Design** components and `theme.useToken()` where the codebase already does (see rich text / layout patterns).
+- User-visible strings: prefer **`MESSAGES`** in [client/src/constants/messages.js](client/src/constants/messages.js) and **i18n** keys under [client/src/i18n/](client/src/i18n/) where applicable.
+- **Rich HTML:** any `dangerouslySetInnerHTML` must use **DOMPurify** with an explicit allowlist — canonical example: [client/src/pages/public/BlogDetail/components/BlogContent/BlogContent.jsx](client/src/pages/public/BlogDetail/components/BlogContent/BlogContent.jsx).
+- New server calls: add endpoints in [client/src/api/](client/src/api/) and thin hooks under [client/src/hooks/api/](client/src/hooks/api/); do not import raw `axios` outside the API layer.

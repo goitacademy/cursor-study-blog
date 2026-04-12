@@ -1,0 +1,17 @@
+---
+description: Monorepo layout, env vars, and where to run commands
+alwaysApply: true
+---
+
+# Monorepo
+
+- Two packages: **`client/`** (Vite + React) and **`server/`** (Express + MongoDB). Each has its own `package.json` — run scripts from the correct directory.
+- **Client:** `cd client && npm run dev` | `npm run build` | `npm run lint`
+- **Server:** `cd server && npm run dev` (DB + nodemon) | `npm run start` | migrations via `npm run migrate:*` in `server/`
+
+## Environment (names only; never commit real values)
+
+- **Client:** `VITE_BASE_URL` (API base URL for axios).
+- **Server:** `PORT`, Mongo URI, `JWT_SECRET`, `CLIENT_URL` (CORS allowlist, comma-separated in prod) — see names in [server/.env.example](server/.env.example); never paste real values from `server/.env` into chat or rules.
+
+Never commit `server/.env` or real API keys. Treat `.env` as local-only.

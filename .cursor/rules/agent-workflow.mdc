@@ -1,0 +1,11 @@
+---
+description: Lint and scoped edits when changing this repo with the agent
+alwaysApply: true
+---
+
+# Agent workflow
+
+- After substantive **client** changes, run `npm run lint` in `client/` and fix new issues the change introduced.
+- Keep diffs **scoped** to the requested task; avoid drive-by refactors across unrelated admin/public areas or both packages unless the user asked for a full-stack change.
+- Full-stack work: align **`VITE_BASE_URL`** with server URL and route prefixes **`/api/blog`**, **`/api/admin`**, and public routes mounted from [server/server.js](server/server.js).
+- Prefer **@filename** references in chat when pointing to canonical examples instead of duplicating large code blocks in messages.
