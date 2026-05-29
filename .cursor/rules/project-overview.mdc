@@ -1,0 +1,53 @@
+---
+description: StudySprint stack, setup, and global coding principles
+alwaysApply: true
+---
+
+# StudySprint — Stack & Principles
+
+Full-stack blog monorepo: React 19 + Vite client, Express 5 + Mongoose server.
+
+## Stack
+
+| Layer | Tech |
+|-------|------|
+| Client | React 19, Vite, Ant Design 6, React Router 7, Axios, i18next, Quill, DOMPurify |
+| Server | Express 5, Mongoose 8, JWT, Multer, Helmet, express-rate-limit |
+| Data | MongoDB via Docker Compose, local file uploads in `uploads/blogs/` |
+| Module system | ESM (`"type": "module"`) throughout |
+
+## Local Setup Order
+
+1. `server/` — copy `.env.example` → `.env`, then `npm install`, `npm run setup`, `npm run server`
+2. `client/` — copy `.env.example` → `.env`, then `npm install`, `npm run dev`
+
+Ports: API **5001**, client **5173**, Mongo Express **8081**.
+
+## UI Framework
+
+We use **Ant Design 6** (`antd`) for all client UI — not custom component libraries or other UI kits.
+
+- Build with Ant Design components (`Button`, `Table`, `Form`, `Input`, `Modal`, etc.)
+- Icons from `@ant-design/icons`
+- Theme and tokens via `ConfigProvider` in `client/src/App.jsx` — extend there, do not hardcode colors
+- Prefer Ant Design layout and form patterns before writing custom UI from scratch
+
+## Coding Principles
+
+- **Minimal diffs** — change only what the task requires; match existing patterns in touched files
+- **Reuse before adding** — prefer Ant Design components, existing helpers, hooks, and API modules over new abstractions
+- **Single source of truth** — server routes define the API; client mirrors them in `apiEndpoints.js`
+- **Consistent responses** — `{ success, message?, count?, ...data }` on every API endpoint
+- **No TypeScript** unless explicitly requested
+- **No new docs markdown** (README, guides) unless explicitly requested — `.cursor/rules/` and `AGENTS.md` are maintained project config
+- **No git commits or PRs** unless explicitly requested
+
+## Known Improvement Areas
+
+When refactoring (not required for every change), prioritize:
+
+1. Wire up unused `server/src/helpers/response.js` and `server/src/constants/messages.js`
+2. Align `client/src/constants/apiEndpoints.js` with actual server routes
+3. Migrate client data-fetching from `AppContext` toward `client/src/hooks/api/`
+4. Add role-based authorization on admin and blog write routes
+5. Keep branding consistent: **StudySprint** / `studysprint` (not QuickBlog)
