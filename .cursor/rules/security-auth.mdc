@@ -1,0 +1,40 @@
+---
+description: Security patterns for auth, input handling, and environment config
+alwaysApply: false
+---
+
+# Security Patterns
+
+Apply when working on login, admin routes, JWT, or user-generated content.
+
+## Authentication Flow
+
+- Client: JWT in `localStorage`, attached via `client/src/api/axiosConfig.js`
+- Server: issued in `adminController.js`, verified by `server/src/middleware/auth.js`
+- Admin UI guard is client-side only — server does not yet enforce role checks
+
+## When Touching Auth
+
+- Preserve 401 interceptor behavior in `axiosConfig.js`
+- Consider adding role-check middleware for `/api/admin/*` and blog write routes
+- Keep rate limiters on login, comments, and AI endpoints — extend, do not remove
+- Hash passwords via existing Mongoose pre-save hook in `User.js`
+
+## Input Handling
+
+- Sanitize rendered HTML with DOMPurify on the client
+- Validate user input in `server/src/validators/` before controllers run
+- Consider wiring `express-mongo-sanitize` in `server.js` for NoSQL injection protection
+
+## Environment & Secrets
+
+- Never commit `.env` files — only update `.env.example` with placeholder values
+- Keep env vars in sync across `.env.example`, `docker-compose.yml`, and `init-scripts/`
+- Do not hardcode secrets, tokens, or passwords in source code or rules files
+- Reference seed credentials only in local `.env.example` / README, never in shared AI rules
+
+## Do Not
+
+- Assume server enforces admin role on protected routes
+- Log or expose passwords, tokens, or connection strings
+- Remove security middleware (Helmet, rate limiters, CORS config) without replacement

@@ -1,0 +1,57 @@
+---
+description: Express 5 backend patterns, MVC conventions, and code quality
+globs: server/**/*.js
+alwaysApply: false
+---
+
+# Server Backend — Best Practices
+
+## Architecture
+
+```
+routes/ → controllers/ → models/
+         ↓
+    validators/ (input checks)
+    middleware/ (auth, upload, rate limit)
+    helpers/    (asyncHandler, response formatters)
+    constants/  (messages, status codes)
+```
+
+No services layer unless a refactor is explicitly requested.
+
+## Controllers
+
+- Wrap every async handler with `asyncHandler` from `server/src/helpers/asyncHandler.js`
+- Use `sendSuccess` / `sendError` / `sendData` from `server/src/helpers/response.js`
+- Use `SUCCESS_MESSAGES` / `ERROR_MESSAGES` / `HTTP_STATUS` from `server/src/constants/messages.js`
+- Keep controllers thin: validate → call model → format response
+
+## Validation
+
+- Input checks belong in `server/src/validators/`, not duplicated in controllers
+- Wrap `JSON.parse(req.body.blog)` in try/catch for multipart blog creation
+
+## Routes
+
+- Static paths (`/all`) before param routes (`/:blogId`)
+- Public routes before `router.use(auth)`
+- Mutations use POST — do not switch to REST verbs without updating the client
+
+## Middleware Stack (preserve order in `server.js`)
+
+CORS → Helmet → body parser → rate limit → static uploads → logging → routes → 404 → error handler
+
+## File Uploads
+
+Use existing Multer config; store images in `uploads/blogs/`, serve via static middleware.
+
+## Logging
+
+Use `httpLogger` for requests/responses and `dbLogger` for database operations — follow existing emoji/format patterns.
+
+## Do Not
+
+- Return inconsistent JSON shapes — always include `success: boolean`
+- Rename env vars without updating `.env.example`, `docker-compose.yml`, and `init-scripts/` together
+- Add one-off helper files for logic used in a single place — keep it inline or in existing modules
+- Skip error handling on model operations (check `findById` results before updating/deleting)

@@ -1,0 +1,33 @@
+---
+description: Documentation and environment template consistency
+alwaysApply: false
+---
+
+# Documentation & Environment
+
+Apply when changing setup steps, env vars, or README files.
+
+## Branding Consistency
+
+Use **StudySprint** / `studysprint` across code, Docker config, seed fixtures, and docs. Replace legacy `quickblog` references when you touch those files.
+
+## README Sync
+
+When setup or run instructions change, update all three together:
+
+- `README.md` (root)
+- `server/README.md`
+- `client/README.md`
+
+## Environment Templates
+
+- `server/.env.example` — database URI, `PORT`, `CLIENT_URL`, `JWT_SECRET`, optional `GEMINI_API_KEY`
+- `client/.env.example` — `VITE_BASE_URL` pointing at the API
+- Templates must stay aligned with `docker-compose.yml`, init scripts, and seed fixtures
+- Use generic placeholders in examples (e.g. `your_jwt_secret_here`) — never real secrets
+
+## Do Not
+
+- Create new README or guide markdown unless explicitly requested
+- Put credentials or secrets in Cursor rules, AGENTS.md, or committed docs
+- Update one README without checking the others for stale content

@@ -1,0 +1,68 @@
+---
+description: React frontend patterns, hooks layer, and UI conventions
+globs: client/src/**/*.{js,jsx}
+alwaysApply: false
+---
+
+# Client React — Best Practices
+
+## Component Organization
+
+One folder per component with co-located styles and a barrel export:
+
+```
+ComponentName/
+├── ComponentName.jsx
+├── ComponentName.css
+└── index.js
+```
+
+- Use `@/` path alias, not deep relative imports
+- Import from barrels: `@/components`, `@/hooks`, `@/pages`, `@/api`
+
+## Data Fetching (preferred order)
+
+1. **Hooks** — `client/src/hooks/api/` via `useApiQuery` / `useApiMutation` (see `hooks/README.md`)
+2. **API modules** — `blogApi`, `adminApi`, `commentApi` in `client/src/api/`
+3. Never add raw `axios` calls inside page components
+
+**Migration direction:** move away from `AppContext` blog fetching toward hooks. Do not expand context for new features.
+
+## Constants & Routing
+
+- Routes: `ROUTES` in `client/src/constants/routes.js`
+- API paths: `API_ENDPOINTS` in `client/src/constants/apiEndpoints.js` — keep aligned with server routes
+- User messages: `client/src/constants/messages.js`
+
+## UI — Ant Design
+
+We use **Ant Design 6** (`antd`) as the sole UI component library.
+
+- Import components from `antd` and icons from `@ant-design/icons`
+- Use existing Ant Design components before building custom ones (e.g. `Table`, `Form`, `Modal`, `Card`, `Menu`, `Layout`)
+- Theme is configured in `client/src/App.jsx` via `ConfigProvider` — use `theme.useToken()` for colors/spacing, not hardcoded values
+- Toasts: `react-hot-toast` (already in use); forms/inputs/tables: Ant Design
+- Co-locate CSS for layout tweaks only; prefer Ant Design props and tokens over custom CSS when possible
+- Sanitize all rendered HTML with DOMPurify
+- Rich text editing via Quill; store HTML, render safely
+
+## Do Not (UI)
+
+- Add other UI libraries (MUI, Chakra, shadcn, etc.) — stick to Ant Design
+- Build custom buttons, inputs, or modals when Ant Design equivalents exist
+
+## i18n
+
+All new user-facing strings go in `client/src/i18n/locales/en.json` via `useTranslation()`.
+
+## Quality Checks
+
+- Run `npm run lint` in `client/` before finishing changes
+- Remove `console.log` when touching a file
+- Check for unused dependencies before adding new packages (Ant Design may already cover the need)
+
+## Do Not
+
+- Duplicate API logic in both a hook and a page component
+- Hardcode English strings when i18n keys should exist
+- Introduce new state libraries (Redux, Zustand) — use existing hooks layer

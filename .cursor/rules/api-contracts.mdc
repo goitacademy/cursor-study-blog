@@ -1,0 +1,44 @@
+---
+description: Client/server API contract — canonical routes and response shape
+globs: client/src/api/**,client/src/constants/apiEndpoints.js,client/src/hooks/api/**,server/src/routes/**
+alwaysApply: false
+---
+
+# API Contracts
+
+Source of truth: `server/src/routes/`. Update server route, `client/src/constants/apiEndpoints.js`, and relevant `*Api.js` / hook in the same change.
+
+## Canonical Routes
+
+| Area | Method | Path | Notes |
+|------|--------|------|-------|
+| List blogs | GET | `/api/blog/all` | Published blogs only |
+| Blog detail | GET | `/api/blog/:blogId` | |
+| Add comment | POST | `/api/blog/add-comment` | body: `{ blog, name, content }` |
+| Get comments | POST | `/api/blog/comments` | body: `{ blogId }` |
+| Create blog | POST | `/api/blog/add` | multipart: `blog` JSON + `image` file |
+| Delete blog | POST | `/api/blog/delete` | body: `{ id }` |
+| Publish | POST | `/api/blog/publish` | body: `{ id }` |
+| Unpublish | POST | `/api/blog/unpublish` | body: `{ id }` |
+| AI generate | POST | `/api/blog/generate` | body: `{ prompt }` |
+| Admin login | POST | `/api/admin/login` | body: `{ email, password }` |
+| Admin dashboard | GET | `/api/admin/dashboard` | not `/stats` |
+| Admin blogs | GET | `/api/admin/blogs` | |
+| Admin comments | GET | `/api/admin/comments` | |
+| Approve comment | POST | `/api/admin/approve-comment` | body: `{ id }` |
+| Unapprove comment | POST | `/api/admin/unapprove-comment` | body: `{ id }` |
+| Delete comment | POST | `/api/admin/delete-comment` | body: `{ id }` |
+| Static images | GET | `/uploads/blogs/:filename` | |
+
+## Response Shape
+
+```javascript
+{ success: true, count?: number, blogs?: [], comments?: [], message?: string, token?: string }
+{ success: false, message: string }
+```
+
+## Do Not
+
+- Use PUT/DELETE client paths unless a matching server route exists
+- Invent REST-style paths (`/api/blog/:id` with PUT) — mutations use POST
+- Change an endpoint on one side without updating the other

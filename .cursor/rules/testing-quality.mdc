@@ -1,0 +1,35 @@
+---
+description: Testing strategy and code quality standards
+globs: "**/*.{test,spec}.{js,jsx},client/**,server/**"
+alwaysApply: false
+---
+
+# Testing & Code Quality
+
+No test harness exists yet. Follow these when adding tests or finishing changes.
+
+## Recommended Stack
+
+| Area | Tool | Why |
+|------|------|-----|
+| Client unit/integration | Vitest + React Testing Library | Native Vite integration |
+| Server integration | Vitest + supertest | Test Express routes end-to-end |
+| Server unit | Vitest with mocked Mongoose models | Isolate controller logic |
+
+## What to Test First
+
+1. API modules and custom hooks (highest reuse, easiest to mock)
+2. Validators and response helpers on the server
+3. Page components last — prefer behavior tests over snapshots
+
+## Quality Gates
+
+- Run `npm run lint` in `client/` after frontend changes
+- Fix endpoint drift: if you change a server route, update `apiEndpoints.js` and the matching `*Api.js` / hook in the same PR
+- Bug fixes: add a regression test when a harness exists; otherwise document manual test steps
+
+## Do Not
+
+- Add tests that only assert mocks or trivial renders
+- Introduce a test runner without adding scripts to `package.json`
+- Duplicate test fixtures — reuse `server/fixtures/` and `server/scripts/seed.js`
