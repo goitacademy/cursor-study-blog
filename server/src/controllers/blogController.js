@@ -3,6 +3,7 @@ import path from 'path'
 import Blog from '../models/Blog.js'
 import Comment from '../models/Comment.js'
 import main from '../configs/gemini.js'
+import { buildBlogGenerationPrompt } from '../configs/blogPrompts.js'
 import { transformBlogImage, transformBlogsImages } from '../utils/imageUrl.js'
 import { asyncHandler } from '../helpers/asyncHandler.js'
 
@@ -34,13 +35,19 @@ export const addBlog = asyncHandler(async (req, res) => {
   const { title, subTitle, description, category, isPublished } = JSON.parse(req.body.blog)
   const imageFile = req.file
 
-  // Check if all fields are present
-  if (!title || !description || !category || !imageFile) {
+  const wantsPublished = Boolean(isPublished)
+
+  // Check required fields (thumbnail required only for published posts)
+  if (!title || !description || !category) {
+    return res.status(400).json({ success: false, message: 'Missing required fields' })
+  }
+
+  if (wantsPublished && !imageFile) {
     return res.status(400).json({ success: false, message: 'Missing required fields' })
   }
 
   // Get the image path from the uploaded file (stored as relative path)
-  const image = getImagePath(imageFile.filename)
+  const image = imageFile ? getImagePath(imageFile.filename) : undefined
 
   // Create blog with author information from authenticated user
   const blog = await Blog.create({
@@ -49,7 +56,7 @@ export const addBlog = asyncHandler(async (req, res) => {
     description,
     category,
     image,
-    isPublished,
+    isPublished: wantsPublished,
     author: req.user.userId,
     authorName: req.user.name
   })
@@ -136,10 +143,17 @@ export const getBlogComments = asyncHandler(async (req, res) => {
 })
 
 export const generateContent = asyncHandler(async (req, res) => {
-  const { prompt } = req.body
-  if (!prompt || !prompt.trim()) {
+  const { prompt, blogDraft, mode } = req.body
+
+  let finalPrompt = prompt
+  if (!finalPrompt || !finalPrompt.trim()) {
+    finalPrompt = buildBlogGenerationPrompt(blogDraft, mode)
+  }
+
+  if (!finalPrompt || !finalPrompt.trim()) {
     return res.status(400).json({ success: false, message: 'Prompt is required' })
   }
-  const content = await main(prompt + ' Generate a blog content for this topic in simple text format')
+
+  const content = await main(finalPrompt)
   res.json({ success: true, content })
 })

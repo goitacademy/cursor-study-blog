@@ -18,7 +18,20 @@ services:
     networks:
       - studysprint-network
     healthcheck:
-      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/studysprint --quiet
+      test:
+        [
+          'CMD',
+          'mongosh',
+          '-u',
+          '${MONGODB_USER:-studysprint}',
+          '-p',
+          '${MONGODB_PASSWORD:-studysprint123}',
+          '--authenticationDatabase',
+          'admin',
+          '--eval',
+          'db.runCommand({ ping: 1 })',
+          '--quiet',
+        ]
       interval: 10s
       timeout: 5s
       retries: 5

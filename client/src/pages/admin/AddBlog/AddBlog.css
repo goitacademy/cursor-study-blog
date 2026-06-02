@@ -4,6 +4,7 @@
   padding: var(--ant-padding-lg);
   background: var(--ant-color-bg-container);
   overflow: auto;
+  position: relative;
 }
 
 .admin-add-blog-title {
@@ -14,6 +15,31 @@
 
 .admin-add-blog-form {
   max-width: 600px;
+}
+
+.admin-add-blog-form-wrapper {
+  position: relative;
+}
+
+.admin-add-blog-blocker {
+  position: absolute;
+  inset: 0;
+  z-index: 2000;
+  background: rgba(0, 0, 0, 0.22);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.admin-add-blog-blocker-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--ant-margin-sm);
+}
+
+.admin-add-blog-blocker .ant-spin {
+  transform: translateY(-6px);
 }
 
 .admin-add-blog-form .ant-form-item-label > label {

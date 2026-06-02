@@ -1,5 +1,10 @@
 export const validateBlogInput = (req, res, next) => {
-  const { title, description, category } = req.body.blog ? JSON.parse(req.body.blog) : {}
+  const {
+    title,
+    description,
+    category,
+    isPublished = false
+  } = req.body.blog ? JSON.parse(req.body.blog) : {}
   const errors = []
 
   if (!title || title.trim().length < 3) {
@@ -11,8 +16,9 @@ export const validateBlogInput = (req, res, next) => {
   if (!category) {
     errors.push('Category is required')
   }
-  if (!req.file) {
-    errors.push('Image is required')
+  // Allow draft creation without a thumbnail, but require it when publishing.
+  if (isPublished && !req.file) {
+    errors.push('Image is required when publishing')
   }
 
   if (errors.length > 0) {

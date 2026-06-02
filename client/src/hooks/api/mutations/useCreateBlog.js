@@ -8,8 +8,9 @@ export function useCreateBlog() {
 
   const createBlog = async (blogData, imageFile) => {
     // Validate inputs before creating FormData
-    if (!imageFile || typeof imageFile === 'boolean') {
-      console.error('Invalid image file:', imageFile)
+    const wantsPublished = Boolean(blogData?.isPublished)
+
+    if (wantsPublished && (!imageFile || typeof imageFile === 'boolean')) {
       return {
         success: false,
         message: 'Invalid image file'
@@ -27,7 +28,9 @@ export function useCreateBlog() {
 
     const formData = new FormData()
     formData.append('blog', JSON.stringify(blogData))
-    formData.append('image', imageFile)
+    if (imageFile) {
+      formData.append('image', imageFile)
+    }
 
     // Debug: Check FormData contents
     console.log('FormData entries:')

@@ -10,29 +10,29 @@ export function useBlogGenerator() {
   const { axios } = useAppContext()
   const { mutate, loading, error } = useApiMutation()
 
-  const generateContent = async (prompt) => {
-    if (!prompt || !prompt.trim()) {
+  const generateContent = async (input) => {
+    const blogDraft = typeof input === 'string' ? { title: input } : (input || {})
+    const promptTitle = blogDraft?.title
+
+    if (!promptTitle || !promptTitle.trim()) {
       toast.error('Please enter a title')
       return { success: false, message: 'Title required' }
     }
 
     const result = await mutate(
-      () => axios.post('/api/blog/generate', { prompt }),
+      () => axios.post('/api/blog/generate', { blogDraft }),
       {
         successMessage: 'Content generated successfully!',
-        errorMessage: MESSAGES.ERROR_GENERIC,
-        onSuccess: (data) => {
-          const parsedContent = parse(data.content)
-          setGeneratedContent(parsedContent)
-        }
+        errorMessage: MESSAGES.ERROR_GENERIC
       }
     )
 
-    if (result.success) {
-      return { success: true, content: generatedContent }
-    }
+    if (!result.success) return result
 
-    return result
+    const parsedContent = parse(result.data.content || '')
+    setGeneratedContent(parsedContent)
+
+    return { success: true, content: parsedContent }
   }
 
   const clearContent = () => {

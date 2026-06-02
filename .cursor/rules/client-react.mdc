@@ -1,0 +1,14 @@
+---
+description: React client patterns
+globs: client/src/**/*.{js,jsx,css}
+alwaysApply: false
+---
+# Client
+
+**Do not:** unsanitized HTML (use DOMPurify); hardcoded API paths; hardcoded UI strings (use i18next + `en.json`); JWT outside `localStorage` key `token`.
+
+- `@/` imports; `Component.jsx` + `Component.css` + `index.js` per feature.
+- API: `constants/apiEndpoints.js` and `src/api/*`.
+- Admin writes: `useApiQuery` / `useApiMutation` from `hooks/core/` — not new inline try/catch + toast.
+- UI: Ant Design; theme in `App.jsx`. Nav: `ROUTES`.
+- Lint after substantive changes: `cd client && npm run lint`.

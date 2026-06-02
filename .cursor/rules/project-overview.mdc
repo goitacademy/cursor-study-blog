@@ -1,0 +1,12 @@
+---
+description: StudySprint monorepo — stack and scope
+alwaysApply: true
+---
+
+# StudySprint
+
+Monorepo: `client/` (Vite + React + Ant Design) and `server/` (Express + Mongoose). No root `package.json`. **JavaScript/JSX only** — no TypeScript, Tailwind, Redux, or Next.js unless asked.
+
+- Edit only the package the task needs; keep diffs small.
+- Never commit `.env`, `uploads/`, or `logs/`.
+- Setup: `server/README.md`, `client/README.md`. Hooks: `client/src/hooks/README.md`.

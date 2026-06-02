@@ -1,9 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { Form, Input, Select, Upload, Button, Typography, Flex, Space } from 'antd'
+import { Form, Input, Select, Upload, Button, Typography, Flex, Space, Spin } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
 import { useTranslation } from 'react-i18next'
 import Quill from 'quill'
 import toast from 'react-hot-toast'
+import DOMPurify from 'dompurify'
 import { BLOG_CATEGORIES } from '@/constants/categories'
 import { UPLOAD, DEFAULTS } from '@/constants/ui'
 import { useBlogGenerator, useCreateBlog } from '@/hooks'
@@ -26,16 +27,35 @@ function AddBlog() {
   const { generateContent, isGenerating } = useBlogGenerator()
   const { createBlog, isCreating } = useCreateBlog()
 
+  const isBusy = isCreating || isGenerating
+
+  const sanitizeHtml = (html) => DOMPurify.sanitize(html, {
+    ALLOWED_TAGS: [
+      'p', 'br', 'strong', 'em', 'u', 's', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
+      'ul', 'ol', 'li', 'blockquote', 'pre', 'code', 'a', 'img', 'span', 'div'
+    ],
+    ALLOWED_ATTR: ['href', 'src', 'alt', 'title', 'class', 'style', 'target', 'rel'],
+    ALLOW_DATA_ATTR: false
+  })
+
+  useEffect(() => {
+    if (!quillRef.current) return
+    quillRef.current.enable(!isBusy)
+  }, [isBusy])
+
   const handleGenerateContent = async () => {
     const title = form.getFieldValue('title')
+    const subTitle = form.getFieldValue('subTitle')
+    const category = form.getFieldValue('category')
+
     if (!title) {
       toast.error(t('messages.error.blogTitle'))
       return
     }
 
-    const result = await generateContent(title)
+    const result = await generateContent({ title, subTitle, category })
     if (result.success && quillRef.current) {
-      quillRef.current.root.innerHTML = result.content
+      quillRef.current.root.innerHTML = sanitizeHtml(result.content)
     }
   }
 
@@ -152,17 +172,18 @@ function AddBlog() {
         {t('admin.addBlog.title')}
       </Title>
 
-      <Form
-        form={form}
-        layout="vertical"
-        onFinish={onSubmitHandler}
-        initialValues={{ category: DEFAULTS.CATEGORY }}
-        className="admin-add-blog-form"
-      >
-        <Form.Item
-          label={t('admin.addBlog.uploadThumbnail')}
+      <div className="admin-add-blog-form-wrapper">
+        <Form
+          form={form}
+          layout="vertical"
+          onFinish={onSubmitHandler}
+          initialValues={{ category: DEFAULTS.CATEGORY }}
+          className="admin-add-blog-form"
         >
-          <Upload {...uploadProps} listType="picture-card" className="admin-upload">
+          <Form.Item
+            label={t('admin.addBlog.uploadThumbnail')}
+          >
+            <Upload {...uploadProps} disabled={isBusy} listType="picture-card" className="admin-upload">
             {imagePreview ? (
               <img
                 src={imagePreview}
@@ -175,81 +196,93 @@ function AddBlog() {
                 <Text className="admin-upload-text">{t('admin.addBlog.uploadButton')}</Text>
               </Flex>
             )}
-          </Upload>
-        </Form.Item>
+            </Upload>
+          </Form.Item>
 
-        <Form.Item
-          label={t('admin.addBlog.titleLabel')}
-          name="title"
-          rules={[{ required: true, message: t('validation.titleRequired') }]}
-        >
-          <Input placeholder={t('admin.addBlog.titlePlaceholder')} />
-        </Form.Item>
+          <Form.Item
+            label={t('admin.addBlog.titleLabel')}
+            name="title"
+            rules={[{ required: true, message: t('validation.titleRequired') }]}
+          >
+            <Input placeholder={t('admin.addBlog.titlePlaceholder')} disabled={isBusy} />
+          </Form.Item>
 
-        <Form.Item
-          label={t('admin.addBlog.subtitleLabel')}
-          name="subTitle"
-          rules={[{ required: true, message: t('validation.subtitleRequired') }]}
-        >
-          <Input placeholder={t('admin.addBlog.titlePlaceholder')} />
-        </Form.Item>
+          <Form.Item
+            label={t('admin.addBlog.subtitleLabel')}
+            name="subTitle"
+            rules={[{ required: true, message: t('validation.subtitleRequired') }]}
+          >
+            <Input placeholder={t('admin.addBlog.titlePlaceholder')} disabled={isBusy} />
+          </Form.Item>
 
-        <Form.Item
-          label={t('admin.addBlog.categoryLabel')}
-          name="category"
-          rules={[{ required: true, message: t('validation.categoryRequired') }]}
-        >
-          <Select placeholder={t('admin.addBlog.categoryPlaceholder')}>
-            {BLOG_CATEGORIES.filter(cat => cat !== 'All').map((item) => (
-              <Select.Option key={item} value={item}>
-                {item}
-              </Select.Option>
-            ))}
-          </Select>
-        </Form.Item>
-
-        <Form.Item
-          label={t('admin.addBlog.bodyLabel')}
-          required
-        >
-          <div className="admin-editor-wrapper">
-            <div
-              ref={editorRef}
-              className="admin-editor"
-            />
-            <Button
-              size="small"
-              onClick={handleGenerateContent}
-              loading={isGenerating}
-              disabled={isGenerating || isCreating}
-              className="admin-editor-ai-button"
+          <Form.Item
+            label={t('admin.addBlog.categoryLabel')}
+            name="category"
+            rules={[{ required: true, message: t('validation.categoryRequired') }]}
+          >
+            <Select
+              placeholder={t('admin.addBlog.categoryPlaceholder')}
+              disabled={isBusy}
             >
-              {t('admin.addBlog.generateAI')}
-            </Button>
+              {BLOG_CATEGORIES.filter(cat => cat !== 'All').map((item) => (
+                <Select.Option key={item} value={item}>
+                  {item}
+                </Select.Option>
+              ))}
+            </Select>
+          </Form.Item>
+
+          <Form.Item
+            label={t('admin.addBlog.bodyLabel')}
+            required
+          >
+            <div className="admin-editor-wrapper">
+              <div
+                ref={editorRef}
+                className="admin-editor"
+              />
+              <Button
+                size="small"
+                onClick={handleGenerateContent}
+                loading={isGenerating}
+                disabled={isGenerating || isCreating}
+                className="admin-editor-ai-button"
+              >
+                {t('admin.addBlog.generateAI')}
+              </Button>
+            </div>
+          </Form.Item>
+
+          <Form.Item className="admin-form-actions-item">
+            <Space size="middle">
+              <Button
+                type="primary"
+                htmlType="submit"
+                loading={isCreating}
+                disabled={isBusy}
+              >
+                {t('admin.addBlog.publishButton')}
+              </Button>
+              <Button
+                onClick={handleSaveDraft}
+                loading={isCreating}
+                disabled={isBusy}
+                className="admin-draft-button"
+              >
+                {t('admin.addBlog.saveDraft')}
+              </Button>
+            </Space>
+          </Form.Item>
+        </Form>
+
+        {isGenerating && (
+          <div className="admin-add-blog-blocker" aria-busy="true">
+            <div className="admin-add-blog-blocker-content">
+              <Spin size="large" tip={t('admin.addBlog.generateAI')} />
+            </div>
           </div>
-        </Form.Item>
-
-        <Form.Item className="admin-form-actions-item">
-          <Space size="middle">
-            <Button
-              type="primary"
-              htmlType="submit"
-              loading={isCreating}
-              disabled={isCreating || isGenerating}
-            >
-              {t('admin.addBlog.publishButton')}
-            </Button>
-            <Button
-              onClick={handleSaveDraft}
-              loading={isCreating}
-              disabled={isCreating || isGenerating}
-              className="admin-draft-button"
-            >
-              {t('admin.addBlog.saveDraft')}
-            </Button>
-          </Space>
-        </Form.Item>
-      </Form>
+        )}
+      </div>
     </Flex>
   )
 }

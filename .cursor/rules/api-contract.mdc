@@ -1,0 +1,12 @@
+---
+description: Keep client and server API in sync
+globs: client/src/api/**,client/src/constants/apiEndpoints.js,server/src/routes/**,server/src/controllers/**
+alwaysApply: false
+---
+
+# API contract
+
+New endpoint → server route + controller **and** `API_ENDPOINTS` + `*Api.js` on client.
+
+- Auth: `Authorization: Bearer <token>`.
+- Blog create: `FormData` with JSON field `blog` + file `image`; do not set JSON Content-Type on FormData.

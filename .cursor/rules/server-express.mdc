@@ -1,0 +1,15 @@
+---
+description: Express API patterns
+globs: server/**/*.js
+alwaysApply: false
+---
+
+# Server
+
+**Do not:** async handlers without `asyncHandler`; protected routes before `router.use(auth)`; non-JSON errors; new env vars without `server/.env.example`.
+
+- Responses: `{ success, message?, errors?, ...data }`.
+- New endpoint: route → validator → controller → model under `/api/blog` or `/api/admin`.
+- Validators: `server/src/validators/`, 400 + `errors[]`.
+- Blog images: Multer, path `/uploads/blogs/...`, `transformBlogImage(s)` in responses.
+- Schema change: timestamped file in `server/migrations/`; update seed if demo data breaks.
