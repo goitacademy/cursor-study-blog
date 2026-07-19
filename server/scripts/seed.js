@@ -166,8 +166,8 @@ const runSeed = async () => {
   process.exit(0)
 }
 
-// Execute if run directly
-if (import.meta.url === `file://${process.argv[1]}`) {
+// Execute if run directly (cross-platform check for Windows/Unix paths)
+if (process.argv[1] && path.resolve(process.argv[1]) === __filename) {
   runSeed()
 }
 

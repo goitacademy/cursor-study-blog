@@ -11,8 +11,6 @@ import '../shared/AdminTable.css'
 import './AddBlog.css'
 
 const { Title, Text } = Typography
-const { TextArea } = Input
-
 function AddBlog() {
   const [form] = Form.useForm()
   const editorRef = useRef(null)
@@ -77,6 +75,18 @@ function AddBlog() {
 
     if (!values.title) {
       toast.error(t('messages.error.blogTitleMin'))
+      return
+    }
+    if (!values.subTitle) {
+      toast.error(t('validation.subtitleRequired'))
+      return
+    }
+    if (!values.category) {
+      toast.error(t('validation.categoryRequired'))
+      return
+    }
+    if (!image) {
+      toast.error(t('messages.error.blogThumbnail'))
       return
     }
 

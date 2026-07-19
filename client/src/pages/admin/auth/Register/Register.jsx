@@ -1,5 +1,5 @@
 import React from 'react'
-import { Form, Input, Button, Layout, Typography, Space, Flex } from 'antd'
+import { Alert, Form, Input, Button, Layout, Typography, Space, Flex } from 'antd'
 import { MailOutlined, EyeInvisibleOutlined, EyeOutlined } from '@ant-design/icons'
 import { useTranslation } from 'react-i18next'
 import { useAppContext } from '@/context/AppContext'
@@ -16,12 +16,11 @@ function Register() {
   const [loading, setLoading] = React.useState(false)
   const { t } = useTranslation()
 
-  const handleSubmit = async (values) => {
+  const handleSubmit = async () => {
     setLoading(true)
 
     try {
-      toast.info(t('messages.info.registrationComingSoon'))
-      console.log('Register values:', values)
+      toast(t('messages.info.registrationComingSoon'), { icon: 'ℹ️' })
     } catch (error) {
       toast.error(error.message || t('messages.error.registration'))
     } finally {
@@ -54,6 +53,11 @@ function Register() {
           <Title level={1} className="auth-card-title">
             {t('auth.register.title')}
           </Title>
+          <Alert
+            type="info"
+            showIcon
+            message={t('messages.info.registrationComingSoon')}
+          />
 
           <Form layout="vertical" onFinish={handleSubmit}>
             <Form.Item
@@ -69,6 +73,7 @@ function Register() {
                 placeholder={t('auth.login.emailPlaceholder')}
                 suffix={<MailOutlined className="auth-input-icon" />}
                 size="large"
+                disabled
               />
             </Form.Item>
 
@@ -85,6 +90,7 @@ function Register() {
                 placeholder={t('auth.login.passwordPlaceholder')}
                 iconRender={visible => visible ? <EyeOutlined /> : <EyeInvisibleOutlined />}
                 size="large"
+                disabled
               />
             </Form.Item>
 
@@ -109,6 +115,7 @@ function Register() {
                 placeholder={t('auth.login.passwordPlaceholder')}
                 iconRender={visible => visible ? <EyeOutlined /> : <EyeInvisibleOutlined />}
                 size="large"
+                disabled
               />
             </Form.Item>
 
@@ -119,8 +126,9 @@ function Register() {
                 block
                 loading={loading}
                 size="large"
+                disabled
               >
-                {t('auth.register.submitButton')}
+                {t('messages.info.registrationComingSoon')}
               </Button>
             </Form.Item>
           </Form>

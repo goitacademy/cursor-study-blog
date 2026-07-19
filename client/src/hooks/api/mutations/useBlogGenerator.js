@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { parse } from 'marked'
 import { useAppContext } from '../../../context/AppContext'
 import { useApiMutation } from '../../core'
 import toast from 'react-hot-toast'
@@ -20,16 +19,14 @@ export function useBlogGenerator() {
       () => axios.post('/api/blog/generate', { prompt }),
       {
         successMessage: 'Content generated successfully!',
-        errorMessage: MESSAGES.ERROR_GENERIC,
-        onSuccess: (data) => {
-          const parsedContent = parse(data.content)
-          setGeneratedContent(parsedContent)
-        }
+        errorMessage: MESSAGES.ERROR_GENERIC
       }
     )
 
     if (result.success) {
-      return { success: true, content: generatedContent }
+      const content = result.data?.content || ''
+      setGeneratedContent(content)
+      return { success: true, content }
     }
 
     return result

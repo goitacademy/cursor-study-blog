@@ -5,7 +5,7 @@ StudySprint is a simple full‑stack blog demo used to showcase Cursor's capabil
 ---
 ### Monorepo Structure
 - [`client/`](client/README.md) — React 19 app (Vite, Ant Design, React Router, Quill editor, Marked, React Hot Toast, i18next, Moment, DOMPurify)
-- [`server/`](server/README.md) — Express 5 API (MongoDB/Mongoose via Docker, JWT auth, Multer, bcryptjs, CORS, Helmet, express-rate-limit, local file storage, Gemini)
+- [`server/`](server/README.md) — Express 5 API (MongoDB/Mongoose via Docker, JWT auth, Multer, bcryptjs, CORS, Helmet, express-rate-limit, local file storage, Groq)
 
 ### Design
 Figma reference: `https://www.figma.com/design/3HUPAs6WgN093rjby8REyr/StudySprint?node-id=8678-14409&t=4kyjZcu1PAlkoznc-1`

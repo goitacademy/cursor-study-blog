@@ -22,8 +22,17 @@ const app = express()
 await connectDB()
 
 // CORS configuration - MUST come before other middlewares
-const devOrigins = ['http://localhost:5173', 'http://localhost:5174', 'http://localhost:5175']
-const prodOrigins = process.env.CLIENT_URL ? process.env.CLIENT_URL.split(',') : []
+const devOrigins = [
+  'http://localhost:4173',
+  'http://localhost:4174',
+  'http://localhost:4175',
+  'http://localhost:5173',
+  'http://localhost:5174',
+  'http://localhost:5175',
+]
+const prodOrigins = process.env.CLIENT_URL
+  ? process.env.CLIENT_URL.split(',').map((url) => url.trim()).filter(Boolean)
+  : []
 const allowedOrigins = [...new Set([...devOrigins, ...prodOrigins])]
 
 app.use(cors({

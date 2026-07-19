@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   mongodb:
     image: mongo:7.0
@@ -18,7 +16,11 @@ services:
     networks:
       - studysprint-network
     healthcheck:
-      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/studysprint --quiet
+      test:
+        [
+          "CMD-SHELL",
+          "echo 'db.runCommand({ ping: 1 }).ok' | mongosh 'mongodb://${MONGODB_USER:-studysprint}:${MONGODB_PASSWORD:-studysprint123}@localhost:27017/admin?authSource=admin' --quiet",
+        ]
       interval: 10s
       timeout: 5s
       retries: 5

@@ -1,12 +1,19 @@
 import rateLimit from 'express-rate-limit'
 
 // Rate limiter for login attempts - stricter limits
+const isDev = process.env.NODE_ENV === 'development'
+const loginWindowMs = isDev ? 60 * 1000 : 15 * 60 * 1000
+const loginMaxAttempts = isDev ? 50 : 5
+
 export const loginLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 5, // 5 attempts per window
+  windowMs: loginWindowMs,
+  max: loginMaxAttempts,
+  skipSuccessfulRequests: true, // don't penalize users once they enter valid credentials
   message: {
     success: false,
-    message: 'Too many login attempts. Please try again after 15 minutes.'
+    message: isDev
+      ? 'Too many login attempts. Please try again in 1 minute.'
+      : 'Too many login attempts. Please try again after 15 minutes.'
   },
   standardHeaders: true,
   legacyHeaders: false

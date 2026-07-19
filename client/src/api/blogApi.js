@@ -2,6 +2,11 @@ import axios from './axiosConfig'
 import { API_ENDPOINTS } from '../constants/apiEndpoints'
 
 export const blogApi = {
+
+  generate: async (prompt) => {
+    // Используем тот же адрес, что был в твоих логах 500 ошибки
+    return await axios.post('/api/blog/generate', { prompt })
+  },
   // Get all blogs
   getAll: async () => {
     return await axios.get(API_ENDPOINTS.BLOGS_ALL)

@@ -56,7 +56,7 @@ npm run seed    # Creates 2 users, 6 blogs, 10 comments
 npm run server
 ```
 
-> **Important:** The database schema, collections, and indexes are **automatically created** by `/init-scripts/*.sh` scripts when Docker starts. These scripts use credentials from your `.env` file. You don't need to run migrations for initial setup. Migrations are only for future schema changes.
+> **Important:** The database schema, collections, and indexes are **automatically created** by `/init-scripts/*.js` scripts when Docker starts. These scripts use credentials from your `.env` file. You don't need to run migrations for initial setup. Migrations are only for future schema changes.
 
 ---
 
@@ -86,7 +86,7 @@ GEMINI_API_KEY=your_gemini_api_key_here
 
 ## 📦 Database Migrations
 
-> **Note:** Initial database setup (collections, indexes) is handled automatically by `/init-scripts/*.sh` scripts when Docker starts. These scripts read credentials from your `.env` file via Docker environment variables. Use migrations only for **future schema changes**.
+> **Note:** Initial database setup (collections, indexes) is handled automatically by `/init-scripts/*.js` scripts when Docker starts. These scripts read credentials from your `.env` file via Docker environment variables. Use migrations only for **future schema changes**.
 
 ### Migration Commands
 ```bash

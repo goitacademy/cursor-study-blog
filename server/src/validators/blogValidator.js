@@ -1,9 +1,22 @@
 export const validateBlogInput = (req, res, next) => {
-  const { title, description, category } = req.body.blog ? JSON.parse(req.body.blog) : {}
+  let blogData = {}
+  try {
+    blogData = req.body.blog ? JSON.parse(req.body.blog) : {}
+  } catch {
+    return res.status(400).json({
+      success: false,
+      message: 'Invalid blog payload'
+    })
+  }
+
+  const { title, subTitle, description, category } = blogData
   const errors = []
 
   if (!title || title.trim().length < 3) {
     errors.push('Title must be at least 3 characters')
+  }
+  if (!subTitle || subTitle.trim().length < 3) {
+    errors.push('Subtitle must be at least 3 characters')
   }
   if (!description || description.trim().length < 10) {
     errors.push('Description must be at least 10 characters')
