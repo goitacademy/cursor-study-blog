@@ -1,0 +1,35 @@
+---
+description: StudySprint monorepo map, stack, commands, and project-wide constraints
+alwaysApply: true
+---
+
+# StudySprint
+
+Blog demo monorepo. Two independent npm packages, no workspace root.
+
+- `client/` — React 19, Vite 6, Ant Design 6, React Router 7, axios, i18next. Plain JS/JSX, ESM.
+- `server/` — Express 5, Mongoose 8, MongoDB in Docker, JWT auth, multer uploads. Plain JS, ESM (`"type": "module"`).
+
+## Commands
+
+Run from the package directory, never from the repo root.
+
+- Server: `npm run dev` (Docker Mongo + nodemon), `npm run seed`, `npm run migrate:up`
+- Client: `npm run dev` (port 5173), `npm run lint`
+
+Server must be running on port 5001 before the client is useful.
+
+## Constraints
+
+- Do not migrate to TypeScript, and do not add `.ts`/`.tsx` files.
+- Do not add a state-management or data-fetching library. The app uses `AppContext` plus the hooks in `client/src/hooks/core/`.
+- Do not add a services layer to the server. Controllers query Mongoose directly by design.
+- Never edit `server/uploads/`, `server/logs/`, or any `.env` file. Update `.env.example` instead.
+- There is no test framework in either package. Do not add tests or a test runner unless asked.
+
+## Canonical docs
+
+Read these instead of guessing; do not duplicate their content into new files.
+
+- `client/src/hooks/README.md` — hooks architecture and how to add a query or mutation
+- `server/README.md` — API reference, Docker setup, migrations

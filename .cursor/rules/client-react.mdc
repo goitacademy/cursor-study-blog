@@ -1,0 +1,64 @@
+---
+globs: client/src/**/*.jsx
+alwaysApply: false
+---
+
+# Client components (React 19 + Ant Design 6)
+
+## File layout
+
+One folder per component: `Name.jsx`, `Name.css`, `index.js`.
+
+```js
+// components/Loader/index.js
+export { default } from './Loader'
+```
+
+- PascalCase folder and file names. Default export from `Name.jsx`, re-export from `index.js`.
+- Shared components go in `client/src/components/`. Components used by exactly one page go in `pages/<area>/<Page>/components/`.
+- Function components only. The project uses no PropTypes — do not add them to individual files.
+
+## Imports
+
+Use the `@/` alias inside `pages/` and `components/`. Use relative paths inside `hooks/`, `api/`, and `context/`, matching the surrounding files.
+
+```jsx
+import { useAppContext } from '@/context/AppContext'
+import { IMAGE, RICH_TEXT } from '@/constants/ui'
+```
+
+## Styling
+
+In order of preference:
+
+1. Ant Design components and `theme.useToken()` values for spacing, color, radius, and font size.
+2. Named constants from `@/constants/ui.js` for layout sizes, table widths, page size, date formats.
+3. A co-located `.css` file for anything the above cannot express.
+
+```jsx
+const { token } = theme.useToken()
+<Tag style={{ marginBottom: token.marginSM }}>{blog.category}</Tag>
+```
+
+Never hardcode a hex color or pixel spacing value that a token or `ui.js` constant already covers. CSS files are global, not modules, so prefix every class with the component name (`blog-card-title`, not `title`).
+
+## Routes
+
+Routes are declared only in `App.jsx`. Every path and path builder lives in `@/constants/routes.js`.
+
+Do not hardcode a path in `navigate()` or `<Link>`. `Login.jsx` currently navigates to `'/register'` and `'/reset-password'`, which are missing from `ROUTES` — add them there rather than copying that pattern.
+
+## Forms
+
+Ant Design `Form` with `Form.useForm()` and declarative `rules`. Do not introduce react-hook-form or Formik. Validation messages use i18n keys under `validation.*`.
+
+## Strings
+
+User-facing text goes through `useTranslation()` and `client/src/i18n/locales/en.json`.
+
+`@/constants/messages.js` is legacy and only still referenced by older hooks. Do not add new keys to it.
+
+## Before finishing
+
+- No `console.log` or `console.error` left in the code. `hooks/api/mutations/useCreateBlog.js` still has debug logging; do not copy that pattern.
+- Run `npm run lint` in `client/`.

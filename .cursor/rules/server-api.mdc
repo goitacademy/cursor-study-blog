@@ -1,0 +1,68 @@
+---
+globs: server/server.js, server/src/routes/**, server/src/controllers/**, server/src/middleware/**, server/src/validators/**, server/src/helpers/**, server/src/utils/**
+alwaysApply: false
+---
+
+# Server API (Express 5)
+
+## Style
+
+ESM with an explicit `.js` extension on every relative import. Single quotes, no semicolons — match the surrounding file. (`src/configs/gemini.js` uses the opposite style; it is the exception, not the model.)
+
+## Layering
+
+Routers stay thin: import controllers and middleware, mount paths, apply `router.use(auth)` before protected routes. Controllers query Mongoose directly.
+
+There is no services layer and none should be added. Factor shared logic into `src/utils/`.
+
+## Controllers
+
+Wrap every async controller in `asyncHandler` so rejections reach the global `errorHandler`. Use an early `return res.status(...).json(...)` for expected failures; throw or let it reject for unexpected ones.
+
+```js
+export const getBlogById = asyncHandler(async (req, res) => {
+  const { blogId } = req.params
+  const blog = await Blog.findById(blogId)
+  if (!blog) {
+    return res.status(404).json({ success: false, message: 'Blog not found' })
+  }
+  res.json({ success: true, blog: transformBlogImage(blog, req) })
+})
+```
+
+Never add a `try/catch` whose only job is to `res.status(500)` — that is what `errorHandler` does, and it already appends the stack in development.
+
+## Response envelope
+
+Every response is `{ success, ... }`. List responses include `count`. The client's `useApiQuery` depends on this, so do not return a bare array or object.
+
+```js
+res.json({ success: true, count: blogs.length, blogs })       // list
+res.status(201).json({ success: true, message: 'Blog added successfully' })
+```
+
+Status codes in use: 200, 201 on create, 400 validation, 401 auth, 404 missing, 500 from the error handler.
+
+## Validation
+
+Validation is middleware in `src/validators/`, mounted in the router before the controller — not inline in the controller body. Collect all failures and return them together:
+
+```js
+return res.status(400).json({ success: false, message: 'Validation failed', errors })
+```
+
+Do not add joi, zod, or express-validator. Keep the existing hand-written style.
+
+## New endpoints
+
+New resources use real HTTP verbs and route params: `DELETE /api/blog/:id`, `PATCH /api/blog/:id/publish`.
+
+The existing action-style routes (`POST /delete`, `/publish`, `/unpublish`, `/approve-comment`) take `{ id }` in the body and stay as they are. The client calls them by those exact paths, so changing one requires the matching change in `client/src/api/` and `client/src/constants/apiEndpoints.js` in the same edit.
+
+## Do not use
+
+`src/helpers/response.js` (`sendSuccess`, `sendError`, `sendData`) and `src/constants/messages.js` (`SUCCESS_MESSAGES`, `ERROR_MESSAGES`, `HTTP_STATUS`) are dead code — nothing imports them. Do not import or extend them; adopting them halfway would leave two competing response styles. Write the literal `res.json({ success: ... })` the other controllers use.
+
+## Middleware order
+
+The chain in `server.js` is order-sensitive: CORS, helmet, body parser, rate limiter, static uploads, logger, routers, `notFound`, `errorHandler`. New global middleware goes before the routers; `notFound` and `errorHandler` stay last.

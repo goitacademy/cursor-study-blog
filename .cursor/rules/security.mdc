@@ -1,0 +1,62 @@
+---
+description: Security rules for StudySprint - auth and JWT roles, secret handling, NoSQL injection, file uploads, HTML sanitization, and logging. Apply when touching authentication, admin endpoints, user input reaching a database query, file uploads, rendered HTML, environment variables, or logging.
+alwaysApply: false
+---
+
+# Security
+
+## Auth and authorization
+
+Tokens arrive as `Authorization: Bearer <token>`; `middleware/auth.js` verifies them and puts the decoded payload on `req.user` as `{ userId, email, name, role }`.
+
+`auth` proves only that the caller is signed in. It does not check `role`, and the `User` schema allows `admin` and `author`, so every authenticated author currently reaches every admin route. Any endpoint that should be admin-only needs an explicit check:
+
+```js
+if (req.user.role !== 'admin') {
+  return res.status(403).json({ success: false, message: 'Forbidden' })
+}
+```
+
+Take the actor from `req.user`, never from the request body — that is how `addBlog` sets `author` and `authorName`.
+
+## Secrets
+
+- Read secrets through `process.env` only. Never inline, log, echo, or put them in an error message.
+- `.env` files are gitignored and must stay that way. Document new variables in `.env.example` with a placeholder value.
+- Anything in a client `VITE_*` variable is bundled and public. Never put an API key or secret there.
+- `JWT_SECRET` is used without a startup check, unlike `MONGODB_URI`. If it is missing, `jwt.sign` throws at request time — validate it at boot rather than adding a fallback default.
+
+## NoSQL injection
+
+`express-mongo-sanitize` is in `package.json` but is never wired into `server.js`, so request bodies reach Mongoose exactly as sent.
+
+Coerce anything from `req.body`, `req.query`, or `req.params` before it enters a query. A JSON body can supply an object where a string is expected, which turns into a query operator:
+
+```js
+// adminLogin passes req.body.email straight into the query.
+// { "email": { "$ne": null } } then matches the first active user.
+const user = await User.findOne({ email, isActive: true })
+
+// Coerce instead:
+const user = await User.findOne({ email: String(email), isActive: true })
+```
+
+Validate ObjectId inputs with `mongoose.isValidObjectId(id)` before querying rather than letting a cast error surface as a 500.
+
+## File uploads
+
+Keep the multer 5MB limit and the image MIME allowlist in `middleware/multer.js`. Both the MIME type and the filename are client-controlled, and `uploads/` is served as static files, so the stored extension comes from `path.extname(file.originalname)`. Derive the extension from the validated MIME type rather than trusting the uploaded name.
+
+Never build a filesystem path by concatenating unsanitized input. `deleteImageFile` in `blogController.js` reduces the path to a bare filename before joining it to the uploads directory — keep that shape.
+
+## Rendered HTML
+
+Blog content is stored as HTML from Quill and rendered with `dangerouslySetInnerHTML`. It must pass through the DOMPurify allowlist in `BlogContent.jsx` first. Do not widen `ALLOWED_TAGS` or `ALLOWED_ATTR` to include event handlers, `script`, `iframe`, or `object`, and do not add a second unsanitized render path.
+
+## Rate limiting
+
+Keep the limiters in `middleware/rateLimiter.js` on the endpoints that have them: login 5 per 15 minutes, comments 5 per minute, AI generation 3 per minute, plus 100 per minute across `/api`. New unauthenticated or expensive endpoints need one too.
+
+## Logging
+
+`utils/httpLogger.js` redacts password and token fields before writing to `logs/http.log`. When adding a logged field, confirm it cannot carry a credential. Never log a full request body, an `Authorization` header, or a JWT.
