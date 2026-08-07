@@ -1,0 +1,56 @@
+---
+globs: client/src/api/**, client/src/hooks/**, client/src/pages/**, client/src/context/**
+alwaysApply: false
+---
+
+# Client data fetching
+
+## Required layering
+
+Every server call follows this chain. Do not skip a layer.
+
+```
+component -> hooks/api/{queries,mutations} -> api/*Api.js -> api/axiosConfig.js
+```
+
+- Components must not import `axios` or call `blogApi`/`commentApi`/`adminApi` directly.
+- Components must not contain `try/catch` with `toast` for a request. That belongs in the hook.
+- Add new GET hooks to `hooks/api/queries/` on top of `useApiQuery`. Add writes to `hooks/api/mutations/` on top of `useApiMutation`. Export through the existing `index.js` barrels so `@/hooks` stays the single import point.
+
+`pages/admin/Articles.jsx` is the pattern to move away from, not copy: `handleDelete`, `handlePublish`, and `handleUnpublish` each repeat an identical `try` / `response.data.success` / `toast` / `refetch` block that `useBlogActions()` already implements.
+
+## Response shape
+
+The server always answers with an envelope, so check `success` before using the payload:
+
+```js
+{ success: true, count: 6, blogs: [...] }      // lists include count
+{ success: false, message: 'Blog not found' }
+```
+
+`useApiQuery` and `useApiMutation` already do this check and surface `error` plus a toast. Rely on them instead of re-checking in the component.
+
+## Endpoints
+
+Endpoint paths belong in `@/constants/apiEndpoints.js`, referenced from the `api/*Api.js` modules.
+
+Several entries there describe routes the server never implemented, which is why some hooks hardcode a path instead. Treat the server routers as the source of truth:
+
+| Constant | Points at | Server actually has |
+| --- | --- | --- |
+| `BLOG_CREATE` | `POST /api/blog` | `POST /api/blog/add` |
+| `BLOG_UPDATE` | `PUT /api/blog/:id` | no update route exists |
+| `BLOG_DELETE` | `DELETE /api/blog/:id` | `POST /api/blog/delete` with `{ id }` in the body |
+| `ADMIN_STATS` | `GET /api/admin/stats` | `GET /api/admin/dashboard` |
+
+When you touch one of these, correct the constant to match the server and point the caller at the constant. Do not add another hardcoded path, and do not "fix" the server route to match the constant without updating every caller.
+
+## Required UI states
+
+Any component that fetches renders all three of loading, error, and empty. Never leave a spinner as the only outcome — `pages/public/BlogDetail` currently shows `<Loader />` whenever `blog` is null, so a failed request spins forever.
+
+## AppContext
+
+`AppContext` holds the auth token and the cross-page search input. Prefer `useBlogs()` for blog data in new code rather than reading `blogs` from the context.
+
+The 401 response interceptor in `api/axiosConfig.js` clears the token and redirects. Do not add competing auth-failure handling in hooks or components.

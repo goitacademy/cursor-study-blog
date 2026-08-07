@@ -1,0 +1,44 @@
+---
+globs: server/src/models/**, server/src/configs/**, server/migrations/**, server/scripts/**, server/fixtures/**, server/init-scripts/**
+alwaysApply: false
+---
+
+# Database (MongoDB + Mongoose 8)
+
+## Schema conventions
+
+- camelCase field names, `is` prefix on booleans (`isPublished`, `isApproved`, `isActive`).
+- `{ timestamps: true }` on every schema; rely on `createdAt`/`updatedAt` rather than adding date fields.
+- Denormalize deliberately and comment why, as `Blog.authorName` does.
+- Reference fields are named after the model, not suffixed with `Id`.
+
+## The comment reference field is `blog`
+
+`Comment.blog` holds the `Blog` ObjectId. There is no `blogId` field on the document.
+
+```js
+await Comment.find({ blog: blogId, isApproved: true })
+```
+
+`migrations/20241014000002-add-comment-indexes.js` builds its indexes on `blogId`, so those three indexes match nothing and are not used by any query. Do not copy that field name; if you touch that migration, fix it to `blog`.
+
+## Migrations
+
+- Create with `npm run migrate:create`, never by hand-naming a file.
+- Always implement both `up` and `down`. Wrap each in `try/catch`, log through `dbLogger.logMigration`, and re-throw so migrate-mongo records the failure.
+- Import the logger as `../src/utils/dbLogger.js`. The three 2024-10-14 migrations use `../utils/dbLogger.js`, which does not resolve — follow `20241129000001-migrate-to-local-storage.js` instead.
+- Never edit a migration that has already run somewhere. Add a new one.
+
+## Indexes must be applied in two places
+
+`init-scripts/init-db.sh` runs only when a Docker volume is created fresh, so it covers new machines. Existing databases only get changes through migrations. An index or validator change needs both, or environments drift.
+
+## Users and passwords
+
+Hashing lives in the `pre('save')` hook on `User`, and `User.toJSON` strips `password`. Never hash in a controller, and never persist a password by any path that bypasses `save()` (`updateOne`, `findOneAndUpdate`, and bulk writes all skip the hook).
+
+`.lean()` and `.toObject()` also skip `toJSON`, so a lean user query will leak the password hash — select it away explicitly or drop the field before responding.
+
+## Seeding
+
+`npm run seed` wipes users, blogs, and comments, then reloads from `fixtures/` and copies `seed-images/` into `uploads/blogs/`. It is destructive and development-only. Keep fixture credentials aligned with the root `README.md` (`admin@studysprint.com`).

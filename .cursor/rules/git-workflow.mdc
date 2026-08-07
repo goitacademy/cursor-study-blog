@@ -1,0 +1,43 @@
+---
+description: Git conventions for StudySprint - commit message style, branch naming, what must never be committed, and pre-commit checks. Apply when committing, branching, or opening a pull request.
+alwaysApply: false
+---
+
+# Git workflow
+
+## Commits
+
+Match the existing history: a short capitalized subject in the imperative mood, no type prefix, no trailing period.
+
+```
+Add initial project and structure
+Update build readme
+Remove cursor rules
+```
+
+Do not switch the repo to Conventional Commits (`feat:`, `fix:`) unless asked — it would break consistency with every existing commit. Say which package the change touches in the subject when it is not obvious.
+
+Keep client and server changes in separate commits unless one cannot work without the other, as with a route rename that spans `server/src/routes/` and `client/src/constants/apiEndpoints.js`.
+
+## Branches
+
+Existing branches use a slash prefix: `feature/`, `chore/`, `lesson/`. Follow that, with a short kebab-case description — `feature/add-blog-ai-creation-page`.
+
+## Never commit
+
+- Any `.env` file. Update `.env.example` with a placeholder instead.
+- `server/logs/` and `server/uploads/blogs/*` — runtime artifacts, already gitignored.
+- `node_modules/`, build output, or `.DS_Store`.
+- A real credential, API key, or JWT, including in a test fixture or a code comment.
+
+## Lockfiles
+
+`client/package-lock.json` is tracked but `server/package-lock.json` is not, because `server/.gitignore` ignores it. Server dependency versions are therefore not reproducible between machines.
+
+Do not work around this by regenerating or force-adding the file silently. If a server dependency changes, say so and propose removing the `package-lock.json` line from `server/.gitignore` as its own change.
+
+## Before committing
+
+- Run `npm run lint` in `client/` for any client change. There is no lint setup on the server.
+- Re-read the diff for leftover `console.log`, commented-out code, and debug values.
+- Do not commit unless the user asked for it.
