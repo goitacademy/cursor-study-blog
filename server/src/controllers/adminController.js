@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken'
 import Blog from '../models/Blog.js'
+import Comment from '../models/Comment.js'
 import User from '../models/User.js'
 import { transformBlogImage, transformBlogsImages } from '../utils/imageUrl.js'
 import { asyncHandler } from '../helpers/asyncHandler.js'
@@ -53,20 +54,65 @@ export const getAllBlogsAdmin = asyncHandler(async (req, res) => {
   })
 })
 
+export const getAllComments = asyncHandler(async (req, res) => {
+  const comments = await Comment.find({}).populate('blog').sort({ createdAt: -1 })
+
+  const transformedComments = comments.map(comment => {
+    const commentObj = comment.toObject()
+    if (commentObj.blog && commentObj.blog.image) {
+      commentObj.blog = transformBlogImage(commentObj.blog, req)
+    }
+    return commentObj
+  })
+
+  res.json({
+    success: true,
+    count: transformedComments.length,
+    comments: transformedComments
+  })
+})
+
 export const getDashboard = asyncHandler(async (req, res) => {
   const recentBlogs = await Blog.find({}).sort({ createdAt: -1 }).limit(6).lean()
-  
-  // Transform image URLs for recent blogs
-  const transformedBlogs = recentBlogs.map(blog => transformBlogImage(blog, req))
-  
+
+  const blogsWithCounts = await Promise.all(
+    recentBlogs.map(async (blog) => {
+      const commentsCount = await Comment.countDocuments({ blog: blog._id })
+      const transformed = transformBlogImage(blog, req)
+      return { ...transformed, commentsCount }
+    })
+  )
+
+  const recentComments = await Comment.find({}).sort({ createdAt: -1 }).limit(6)
   const blogs = await Blog.countDocuments()
+  const comments = await Comment.countDocuments()
   const drafts = await Blog.countDocuments({ isPublished: false })
 
   const dashboardData = {
     blogs,
+    comments,
     drafts,
-    recentBlogs: transformedBlogs
+    recentBlogs: blogsWithCounts,
+    recentComments
   }
-  
+
   res.json({ success: true, dashboardData })
+})
+
+export const deleteCommentById = asyncHandler(async (req, res) => {
+  const { id } = req.body
+  await Comment.findByIdAndDelete(id)
+  res.json({ success: true, message: 'Comment deleted successfully' })
+})
+
+export const approveCommentById = asyncHandler(async (req, res) => {
+  const { id } = req.body
+  await Comment.findByIdAndUpdate(id, { isApproved: true })
+  res.json({ success: true, message: 'Comment approved successfully' })
+})
+
+export const unapproveCommentById = asyncHandler(async (req, res) => {
+  const { id } = req.body
+  await Comment.findByIdAndUpdate(id, { isApproved: false })
+  res.json({ success: true, message: 'Comment unapproved successfully' })
 })

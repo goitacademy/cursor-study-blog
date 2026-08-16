@@ -1,8 +1,12 @@
 import express from 'express'
-import { 
-  adminLogin, 
-  getAllBlogsAdmin, 
-  getDashboard 
+import {
+  adminLogin,
+  approveCommentById,
+  unapproveCommentById,
+  deleteCommentById,
+  getAllBlogsAdmin,
+  getAllComments,
+  getDashboard
 } from '../controllers/adminController.js'
 import auth from '../middleware/auth.js'
 import { loginLimiter } from '../middleware/rateLimiter.js'
@@ -17,5 +21,9 @@ adminRouter.use(auth)
 
 adminRouter.get('/dashboard', getDashboard)
 adminRouter.get('/blogs', getAllBlogsAdmin)
+adminRouter.get('/comments', getAllComments)
+adminRouter.post('/approve-comment', approveCommentById)
+adminRouter.post('/unapprove-comment', unapproveCommentById)
+adminRouter.post('/delete-comment', deleteCommentById)
 
 export default adminRouter

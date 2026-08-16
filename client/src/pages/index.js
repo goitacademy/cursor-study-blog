@@ -7,6 +7,7 @@ export {
   Dashboard,
   AddBlog,
   Articles,
+  Comments,
   Login,
   Register,
   ResetPassword
