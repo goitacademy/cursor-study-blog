@@ -1,12 +1,12 @@
 import express from 'express'
-import { 
-  adminLogin, 
+import {
+  adminLogin,
   approveCommentById,
   unapproveCommentById,
-  deleteCommentById, 
-  getAllBlogsAdmin, 
-  getAllComments, 
-  getDashboard 
+  deleteCommentById,
+  getAllBlogsAdmin,
+  getAllComments,
+  getDashboard
 } from '../controllers/adminController.js'
 import auth from '../middleware/auth.js'
 import { loginLimiter } from '../middleware/rateLimiter.js'

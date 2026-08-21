@@ -1,0 +1,44 @@
+---
+description: Frontend (client) conventions
+globs:
+  - "client/src/**/*"
+---
+
+## Imports / aliases
+- Prefer `@/…` alias for `client/src` (configured in `client/vite.config.js`).
+
+### Good
+```js
+import { ROUTES } from '@/constants/routes'
+import { blogApi } from '@/api'
+```
+
+### Bad
+```js
+import { ROUTES } from '../../constants/routes'
+```
+
+## API calls
+- Centralize HTTP in `client/src/api/*`.
+- Use `axiosInstance` from `client/src/api/axiosConfig.js` and keep base URL as `import.meta.env.VITE_BASE_URL`.
+- Define endpoints in `client/src/constants/apiEndpoints.js`.
+
+### Good
+```js
+return await axios.get(API_ENDPOINTS.BLOG_BY_ID(id))
+```
+
+### Bad
+```js
+return await axios.get('/api/blog/' + id)
+```
+
+## Request state & toasts
+- Prefer existing hooks in `client/src/hooks/core/*` (e.g. `useApiRequest`) to standardize loading/error/toasts.
+
+## Auth token
+- Keep token in `localStorage` and send it as `Authorization: Bearer <token>` (axios interceptor already does this).
+- On 401, follow current behavior (clear token and redirect to `/admin`).
+
+## Routing
+- Keep route strings centralized in `client/src/constants/routes.js` and use them in `client/src/App.jsx`.

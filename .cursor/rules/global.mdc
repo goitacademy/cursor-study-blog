@@ -1,0 +1,28 @@
+---
+description: Global repo conventions (client + server)
+globs:
+  - "**/*"
+---
+
+## Do not commit / do not touch
+- Never add or modify generated artifacts: `**/node_modules/**`, `**/dist/**`, Vite deps cache, logs, and uploaded media.
+  - Examples in this repo: `server/logs/**`, `server/uploads/**`, `client/node_modules/.vite/**`.
+
+## Secrets & env
+- Never hardcode secrets or credentials.
+- Use env vars and mirror them in `.env.example` (keep keys, remove real values).
+
+## API response shape
+- Keep backend responses consistent with current shape:
+  - Success: `{ success: true, ... }`
+  - Error: `{ success: false, message: string, ... }`
+
+### Good
+```js
+return res.status(404).json({ success: false, message: 'Blog not found' })
+```
+
+### Bad
+```js
+return res.send('not found')
+```

@@ -4,7 +4,7 @@ import { MESSAGES } from '../../../constants/messages'
 
 export function useAdminComments() {
   const { axios } = useAppContext()
-  
+
   const { data, loading, error, refetch } = useApiQuery(
     () => axios.get('/api/admin/comments'),
     {
@@ -19,4 +19,3 @@ export function useAdminComments() {
     refetch
   }
 }
-

@@ -11,7 +11,7 @@ export function useCommentActions() {
 
   const approveComment = async (commentId) => {
     setIsApproving(true)
-    
+
     const result = await mutate(
       () => axios.post('/api/admin/approve-comment', { id: commentId }),
       {
@@ -19,14 +19,14 @@ export function useCommentActions() {
         errorMessage: MESSAGES.ERROR_GENERIC
       }
     )
-    
+
     setIsApproving(false)
     return result
   }
 
   const deleteComment = async (commentId) => {
     setIsDeleting(true)
-    
+
     const result = await mutate(
       () => axios.post('/api/admin/delete-comment', { id: commentId }),
       {
@@ -35,7 +35,7 @@ export function useCommentActions() {
         errorMessage: MESSAGES.ERROR_DELETE_COMMENT
       }
     )
-    
+
     setIsDeleting(false)
     return result
   }
@@ -49,4 +49,3 @@ export function useCommentActions() {
     error
   }
 }
-

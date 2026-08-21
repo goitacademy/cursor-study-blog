@@ -18,7 +18,7 @@ export function useComments(blogId) {
       setLoading(true)
       setError(null)
       const response = await commentApi.getByBlogId(blogId)
-      
+
       if (response.data.success) {
         setComments(response.data.comments)
       } else {
@@ -42,7 +42,7 @@ export function useComments(blogId) {
   const addComment = async (commentData) => {
     try {
       const response = await commentApi.add(commentData)
-      
+
       if (response.data.success) {
         toast.success(response.data.message || MESSAGES.SUCCESS_COMMENT_ADDED)
         await fetchComments()
@@ -52,7 +52,10 @@ export function useComments(blogId) {
         return { success: false, message: response.data.message }
       }
     } catch (err) {
-      const errorMessage = err.response?.data?.message || err.message || MESSAGES.ERROR_ADD_COMMENT
+      const serverErrors = err.response?.data?.errors
+      const errorMessage = Array.isArray(serverErrors) && serverErrors.length > 0
+        ? serverErrors.join('. ')
+        : err.response?.data?.message || err.message || MESSAGES.ERROR_ADD_COMMENT
       toast.error(errorMessage)
       return { success: false, message: errorMessage }
     }
@@ -60,4 +63,3 @@ export function useComments(blogId) {
 
   return { comments, loading, error, addComment, refetch: fetchComments }
 }
-

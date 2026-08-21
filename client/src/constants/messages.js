@@ -8,7 +8,8 @@ export const MESSAGES = {
   SUCCESS_COMMENT_APPROVED: 'Comment approved successfully!',
   SUCCESS_LOGIN: 'Login successful!',
   SUCCESS_LOGOUT: 'Logout successful!',
-  
+  SUCCESS_CONTENT_GENERATED: 'Content generated successfully!',
+
   // Error messages
   ERROR_GENERIC: 'Something went wrong. Please try again.',
   ERROR_FETCH_BLOGS: 'Failed to fetch blogs.',
@@ -21,12 +22,12 @@ export const MESSAGES = {
   ERROR_DELETE_COMMENT: 'Failed to delete comment.',
   ERROR_LOGIN: 'Login failed. Please check your credentials.',
   ERROR_UNAUTHORIZED: 'You are not authorized to perform this action.',
-  
+
   // Validation messages
   VALIDATION_REQUIRED_FIELD: 'This field is required.',
   VALIDATION_EMAIL_INVALID: 'Please enter a valid email address.',
   VALIDATION_PASSWORD_MIN: 'Password must be at least 6 characters.',
-  
+
   // Info messages
   INFO_NO_BLOGS: 'No blogs found.',
   INFO_NO_COMMENTS: 'No comments yet. Be the first!',

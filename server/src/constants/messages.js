@@ -4,6 +4,7 @@ export const SUCCESS_MESSAGES = {
   BLOG_UPDATED: 'Blog status updated',
   COMMENT_ADDED: 'Comment added for review',
   COMMENT_APPROVED: 'Comment approved successfully',
+  COMMENT_UNAPPROVED: 'Comment unapproved successfully',
   COMMENT_DELETED: 'Comment deleted successfully',
   LOGIN_SUCCESS: 'Login successful'
 }

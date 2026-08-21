@@ -1,14 +1,14 @@
 import express from 'express'
-import { 
-  addBlog, 
-  addComment, 
-  deleteBlogById, 
-  generateContent, 
-  getAllBlogs, 
-  getBlogById, 
-  getBlogComments, 
+import {
+  addBlog,
+  addComment,
+  deleteBlogById,
+  generateContent,
+  getAllBlogs,
+  getBlogById,
+  getBlogComments,
   publishBlog,
-  unpublishBlog 
+  unpublishBlog
 } from '../controllers/blogController.js'
 import upload from '../middleware/multer.js'
 import auth from '../middleware/auth.js'

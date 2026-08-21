@@ -1,7 +1,7 @@
 import mongoose from 'mongoose'
 import fs from 'fs'
 import path from 'path'
-import { fileURLToPath } from 'url'
+import { fileURLToPath, pathToFileURL } from 'url'
 import 'dotenv/config'
 import User from '../src/models/User.js'
 import Blog from '../src/models/Blog.js'
@@ -167,8 +167,6 @@ const runSeed = async () => {
 }
 
 // Execute if run directly
-if (import.meta.url === `file://${process.argv[1]}`) {
-  runSeed()
-}
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) runSeed()
 
 export default runSeed

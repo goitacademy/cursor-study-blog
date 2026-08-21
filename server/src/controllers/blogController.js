@@ -3,6 +3,7 @@ import path from 'path'
 import Blog from '../models/Blog.js'
 import Comment from '../models/Comment.js'
 import main from '../configs/gemini.js'
+import { buildBlogPrompt } from '../prompts/blogGeneration.js'
 import { transformBlogImage, transformBlogsImages } from '../utils/imageUrl.js'
 import { asyncHandler } from '../helpers/asyncHandler.js'
 
@@ -136,10 +137,18 @@ export const getBlogComments = asyncHandler(async (req, res) => {
 })
 
 export const generateContent = asyncHandler(async (req, res) => {
+  if (!process.env.GEMINI_API_KEY) {
+    return res.status(500).json({
+      success: false,
+      message: 'Gemini API key is not configured'
+    })
+  }
+
   const { prompt } = req.body
   if (!prompt || !prompt.trim()) {
     return res.status(400).json({ success: false, message: 'Prompt is required' })
   }
-  const content = await main(prompt + ' Generate a blog content for this topic in simple text format')
+
+  const content = await main(buildBlogPrompt(prompt))
   res.json({ success: true, content })
 })

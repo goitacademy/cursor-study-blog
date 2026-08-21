@@ -56,10 +56,6 @@
       "draft": "Draft"
     }
   },
-  "blogDetail": {
-    "shareTitle": "Share this article on social media",
-    "coverAlt": "Article cover"
-  },
   "comment": {
     "title": "Leave a comment",
     "description": "Want to share your thoughts or leave a comment? We'd love to hear from you!",
@@ -71,6 +67,10 @@
     "approve": "Approve comment",
     "unapprove": "Unapprove comment",
     "deleteComment": "Delete comment"
+  },
+  "blogDetail": {
+    "shareTitle": "Share this article on social media",
+    "coverAlt": "Article cover"
   },
   "admin": {
     "sidebar": {
@@ -167,10 +167,15 @@
     "confirmPasswordRequired": "Please confirm your password",
     "passwordMismatch": "Passwords do not match",
     "nameRequired": "Please enter your name",
+    "nameMin": "Name must be at least 2 characters",
     "commentRequired": "Please enter your comment",
+    "commentMin": "Comment must be at least {{min}} characters",
     "titleRequired": "Please enter article title",
     "subtitleRequired": "Please enter subtitle",
-    "categoryRequired": "Please select a category"
+    "categoryRequired": "Please select a category",
+    "descriptionRequired": "Please add blog description",
+    "thumbnailRequired": "Please upload a thumbnail image",
+    "commentMax": "Comment must be {{max}} characters or less"
   },
   "messages": {
     "success": {

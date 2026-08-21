@@ -1,12 +1,11 @@
-import { useState } from 'react'
 import { parse } from 'marked'
 import { useAppContext } from '../../../context/AppContext'
 import { useApiMutation } from '../../core'
 import toast from 'react-hot-toast'
 import { MESSAGES } from '../../../constants/messages'
+import { API_ENDPOINTS } from '../../../constants/apiEndpoints'
 
 export function useBlogGenerator() {
-  const [generatedContent, setGeneratedContent] = useState(null)
   const { axios } = useAppContext()
   const { mutate, loading, error } = useApiMutation()
 
@@ -17,35 +16,24 @@ export function useBlogGenerator() {
     }
 
     const result = await mutate(
-      () => axios.post('/api/blog/generate', { prompt }),
+      () => axios.post(API_ENDPOINTS.BLOG_GENERATE, { prompt }),
       {
-        successMessage: 'Content generated successfully!',
-        errorMessage: MESSAGES.ERROR_GENERIC,
-        onSuccess: (data) => {
-          const parsedContent = parse(data.content)
-          setGeneratedContent(parsedContent)
-        }
+        successMessage: MESSAGES.SUCCESS_CONTENT_GENERATED,
+        errorMessage: MESSAGES.ERROR_GENERIC
       }
     )
 
-    if (result.success) {
-      return { success: true, content: generatedContent }
+    if (result.success && result.data?.content) {
+      return { success: true, content: parse(result.data.content) }
     }
 
     return result
   }
 
-  const clearContent = () => {
-    setGeneratedContent(null)
-  }
-
   return {
     generateContent,
-    clearContent,
-    generatedContent,
     isGenerating: loading,
     inProgress: loading,
     error
   }
 }
-

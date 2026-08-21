@@ -59,9 +59,17 @@ function Comments() {
   }
 
   const sortedComments = useMemo(() => {
-    let sorted = [...comments]
+    const sorted = [...comments]
     if (sortBy === t('admin.listBlog.sortLatest') || sortBy === 'Latest') {
       sorted.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+    } else if (sortBy === t('admin.comments.sortByArticle') || sortBy === 'By Article') {
+      sorted.sort((a, b) => {
+        const titleA = a.blog?.title || ''
+        const titleB = b.blog?.title || ''
+        const byTitle = titleA.localeCompare(titleB)
+        if (byTitle !== 0) return byTitle
+        return new Date(b.createdAt) - new Date(a.createdAt)
+      })
     }
     return sorted
   }, [comments, sortBy, t])

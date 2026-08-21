@@ -1,0 +1,40 @@
+---
+description: Backend (server) conventions
+globs:
+  - "server/**/*"
+---
+
+## Project structure
+- Routes in `server/src/routes/*Routes.js` should be thin and map to controller functions.
+- Business logic lives in `server/src/controllers/*Controller.js`.
+- Shared concerns belong in `server/src/middleware`, `server/src/utils`, `server/src/helpers`.
+
+## Async controllers
+- Wrap async controllers with `asyncHandler` (`server/src/helpers/asyncHandler.js`) and let `errorHandler` handle uncaught errors.
+
+### Good
+```js
+export const getAllBlogs = asyncHandler(async (req, res) => {
+  const blogs = await Blog.find({ isPublished: true })
+  res.json({ success: true, count: blogs.length, blogs })
+})
+```
+
+### Bad
+```js
+export const getAllBlogs = async (req, res) => {
+  try { /* ... */ } catch (e) { res.json(e) }
+}
+```
+
+## Middleware ordering
+- Keep the current ordering in `server/server.js`: CORS first, then security/body parsing, then rate limiting, then routes, then `notFound` + `errorHandler` last.
+
+## Auth
+- Use `server/src/middleware/auth.js` for protected routes; expect `Authorization: Bearer <token>`.
+
+## Uploads
+- Use existing multer config (`server/src/middleware/multer.js`). Store images under `/uploads/blogs/*` and serve via `app.use('/uploads', express.static(...))`.
+
+## Rate limiting
+- Reuse existing limiters from `server/src/middleware/rateLimiter.js` instead of creating new ad-hoc logic.

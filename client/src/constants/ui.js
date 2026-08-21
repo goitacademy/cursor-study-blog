@@ -44,6 +44,12 @@ export const UPLOAD = {
   ACCEPTED_TYPES: 'image/*'
 }
 
+// UI Constants - Comments
+export const COMMENT = {
+  MIN_LENGTH: 5,
+  MAX_LENGTH: 650
+}
+
 // UI Constants - Date Formats
 export const DATE_FORMATS = {
   DISPLAY: 'DD MMM, YYYY',

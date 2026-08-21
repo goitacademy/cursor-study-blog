@@ -56,8 +56,7 @@ export const getAllBlogsAdmin = asyncHandler(async (req, res) => {
 
 export const getAllComments = asyncHandler(async (req, res) => {
   const comments = await Comment.find({}).populate('blog').sort({ createdAt: -1 })
-  
-  // Transform blog images in comments that have populated blog
+
   const transformedComments = comments.map(comment => {
     const commentObj = comment.toObject()
     if (commentObj.blog && commentObj.blog.image) {
@@ -65,7 +64,7 @@ export const getAllComments = asyncHandler(async (req, res) => {
     }
     return commentObj
   })
-  
+
   res.json({
     success: true,
     count: transformedComments.length,
@@ -75,8 +74,7 @@ export const getAllComments = asyncHandler(async (req, res) => {
 
 export const getDashboard = asyncHandler(async (req, res) => {
   const recentBlogs = await Blog.find({}).sort({ createdAt: -1 }).limit(6).lean()
-  
-  // Add comment counts to each blog and transform image URLs
+
   const blogsWithCounts = await Promise.all(
     recentBlogs.map(async (blog) => {
       const commentsCount = await Comment.countDocuments({ blog: blog._id })
@@ -84,20 +82,20 @@ export const getDashboard = asyncHandler(async (req, res) => {
       return { ...transformed, commentsCount }
     })
   )
-  
+
   const recentComments = await Comment.find({}).sort({ createdAt: -1 }).limit(6)
   const blogs = await Blog.countDocuments()
   const comments = await Comment.countDocuments()
   const drafts = await Blog.countDocuments({ isPublished: false })
 
   const dashboardData = {
-    blogs, 
-    comments, 
-    drafts, 
-    recentBlogs: blogsWithCounts, 
+    blogs,
+    comments,
+    drafts,
+    recentBlogs: blogsWithCounts,
     recentComments
   }
-  
+
   res.json({ success: true, dashboardData })
 })
 
