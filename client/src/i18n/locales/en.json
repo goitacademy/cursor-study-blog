@@ -98,6 +98,7 @@
       "categoryPlaceholder": "Select Category",
       "bodyLabel": "Article text",
       "generateAI": "Generate with AI",
+      "generatingAI": "Generating content with AI...",
       "publishButton": "Publish Article",
       "saveDraft": "Save Draft"
     },
