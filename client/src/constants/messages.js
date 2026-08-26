@@ -1,6 +1,7 @@
 export const MESSAGES = {
   // Success messages
   SUCCESS_BLOG_UPDATED: 'Blog updated successfully!',
+  SUCCESS_BLOG_CREATED: 'Blog created successfully!',
   SUCCESS_BLOG_DELETED: 'Blog deleted successfully!',
   SUCCESS_COMMENT_ADDED: 'Comment added successfully!',
   SUCCESS_COMMENT_DELETED: 'Comment deleted successfully!',
@@ -13,6 +14,7 @@ export const MESSAGES = {
   ERROR_FETCH_BLOGS: 'Failed to fetch blogs.',
   ERROR_FETCH_BLOG: 'Failed to fetch blog details.',
   ERROR_UPDATE_BLOG: 'Failed to update blog.',
+  ERROR_CREATE_BLOG: 'Failed to create blog.',
   ERROR_DELETE_BLOG: 'Failed to delete blog.',
   ERROR_FETCH_COMMENTS: 'Failed to fetch comments.',
   ERROR_ADD_COMMENT: 'Failed to add comment.',

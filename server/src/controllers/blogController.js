@@ -2,8 +2,15 @@ import fs from 'fs'
 import path from 'path'
 import Blog from '../models/Blog.js'
 import Comment from '../models/Comment.js'
+import main from '../configs/gemini.js'
+import { buildArticlePrompt } from '../utils/blogPrompt.js'
 import { transformBlogImage, transformBlogsImages } from '../utils/imageUrl.js'
 import { asyncHandler } from '../helpers/asyncHandler.js'
+
+// Helper to get image URL from filename (relative path for storage)
+const getImagePath = (filename) => {
+  return `/uploads/blogs/${filename}`
+}
 
 // Helper to delete image file
 const deleteImageFile = (imagePath) => {
@@ -23,6 +30,41 @@ const deleteImageFile = (imagePath) => {
     }
   }
 }
+
+export const addBlog = asyncHandler(async (req, res) => {
+  const { title, subTitle, description, category, isPublished } = JSON.parse(req.body.blog)
+  const imageFile = req.file
+
+  const image = imageFile ? getImagePath(imageFile.filename) : ''
+
+  const blog = await Blog.create({
+    title,
+    subTitle: subTitle || '',
+    description: description || '',
+    category: category || 'Startup',
+    image,
+    isPublished: Boolean(isPublished),
+    author: req.user.userId,
+    authorName: req.user.name
+  })
+
+  res.status(201).json({
+    success: true,
+    message: 'Blog added successfully',
+    blog: transformBlogImage(blog, req)
+  })
+})
+
+export const generateContent = asyncHandler(async (req, res) => {
+  const { prompt } = req.body
+  if (!prompt || !prompt.trim()) {
+    return res.status(400).json({ success: false, message: 'Prompt is required' })
+  }
+
+  const content = await main(buildArticlePrompt(prompt, req.user.name))
+
+  res.json({ success: true, content })
+})
 
 export const getAllBlogs = asyncHandler(async (req, res) => {
   const blogs = await Blog.find({ isPublished: true })
