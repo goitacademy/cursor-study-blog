@@ -45,7 +45,7 @@ const { execute, loading, error } = useApiRequest()
 
 const handleAction = async () => {
   const result = await execute(
-    () => axios.post('/api/endpoint'),
+    () => axios.post(API_ENDPOINTS.YOUR_ENDPOINT),
     {
       successMessage: 'Success!',
       errorMessage: 'Failed',

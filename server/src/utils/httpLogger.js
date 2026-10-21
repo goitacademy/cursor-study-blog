@@ -82,7 +82,7 @@ const httpLogger = (req, res, next) => {
           responseInfo += ` | ${metadata.join(', ')}`
         }
       }
-    } catch (e) {
+    } catch {
       // Not JSON, skip metadata
     }
     

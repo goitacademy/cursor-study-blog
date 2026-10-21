@@ -23,4 +23,3 @@ print('✅ Created user: ${MONGO_INITDB_ROOT_USERNAME} for database: ${MONGO_INI
 "
 
 echo "✅ Database user creation complete"
-

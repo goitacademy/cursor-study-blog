@@ -39,7 +39,7 @@ This project uses a **local MongoDB database** running in Docker (no cloud datab
 
 To view your data:
 - **Mongo Express** (Web UI): `http://localhost:8081` (login with your `MONGODB_USER` / `MONGODB_PASSWORD` from `server/.env`)
-- **MongoDB Compass** (Desktop): Connect using your `MONGODB_URI` from `server/.env` (format: `mongodb://USER:PASSWORD@localhost:27017/DATABASE`)
+- **MongoDB Compass** (Desktop): Connect using your `MONGODB_URI` from `server/.env` (include `?authSource=admin` for local Docker)
 
 ### Environment Variables
 See [`server/README.md`](server/README.md) and [`client/README.md`](client/README.md) for complete environment configuration. Server requires database credentials, `JWT_SECRET`, and optionally `GEMINI_API_KEY`. Client only needs `VITE_BASE_URL`.

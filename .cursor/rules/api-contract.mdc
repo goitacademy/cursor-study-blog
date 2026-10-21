@@ -1,0 +1,17 @@
+---
+description: API paths that differ from typical REST
+globs: client/src/**/*.{js,jsx},server/src/routes/**/*.js,server/src/controllers/**/*.js
+alwaysApply: false
+---
+
+# API contract
+
+Server routes are the source of truth. Change a route and `client/src/constants/apiEndpoints.js` together. Hooks and `*Api.js` import those constants — do not hardcode `/api/...`.
+
+Non-REST paths (do not invent the REST equivalents):
+
+- Create blog: `POST /api/blog/add` multipart (`blog` JSON string + `image`)
+- Delete blog: `POST /api/blog/delete` `{ id }`
+- Publish / unpublish: `POST /api/blog/publish` and `/unpublish` `{ id }` — not `toggle-publish`
+- Dashboard: `GET /api/admin/dashboard` — not `/api/admin/stats`
+- No `PUT` or `DELETE /api/blog/:id`

@@ -1,0 +1,13 @@
+---
+description: Non-obvious local setup that breaks this repo
+alwaysApply: true
+---
+
+# Setup traps
+
+- No root `package.json`. Run `client/` and `server/` separately.
+- Client must have `VITE_BASE_URL=http://localhost:5001`. Restart Vite after `.env` changes or API calls 404 on port 5173.
+- Local Docker Mongo: `MONGODB_URI` needs `?authSource=admin`. Keep `server/init-scripts/*.sh` as LF (CRLF skips init).
+- Server npm scripts use `cross-env` for `NODE_ENV`. Do not switch them back to Unix `NODE_ENV=...`.
+- Seeded admin is `admin@studysprint.com` / `admin123` (`server/fixtures/users.js`). Do not use emails from old comments.
+- Do not commit `.env` or real secrets.

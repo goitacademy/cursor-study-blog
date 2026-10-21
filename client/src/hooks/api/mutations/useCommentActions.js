@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useAppContext } from '../../../context/AppContext'
 import { useApiMutation } from '../../core'
 import { MESSAGES } from '../../../constants/messages'
+import { API_ENDPOINTS } from '../../../constants/apiEndpoints'
 
 export function useCommentActions() {
   const [isApproving, setIsApproving] = useState(false)
@@ -13,7 +14,7 @@ export function useCommentActions() {
     setIsApproving(true)
     
     const result = await mutate(
-      () => axios.post('/api/admin/approve-comment', { id: commentId }),
+      () => axios.post(API_ENDPOINTS.COMMENT_APPROVE, { id: commentId }),
       {
         successMessage: MESSAGES.SUCCESS_COMMENT_APPROVED,
         errorMessage: MESSAGES.ERROR_GENERIC
@@ -28,7 +29,7 @@ export function useCommentActions() {
     setIsDeleting(true)
     
     const result = await mutate(
-      () => axios.post('/api/admin/delete-comment', { id: commentId }),
+      () => axios.post(API_ENDPOINTS.COMMENT_DELETE, { id: commentId }),
       {
         confirmMessage: 'Are you sure you want to delete this comment?',
         successMessage: MESSAGES.SUCCESS_COMMENT_DELETED,

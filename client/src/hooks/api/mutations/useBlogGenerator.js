@@ -4,6 +4,7 @@ import { useAppContext } from '../../../context/AppContext'
 import { useApiMutation } from '../../core'
 import toast from 'react-hot-toast'
 import { MESSAGES } from '../../../constants/messages'
+import { API_ENDPOINTS } from '../../../constants/apiEndpoints'
 
 export function useBlogGenerator() {
   const [generatedContent, setGeneratedContent] = useState(null)
@@ -17,7 +18,7 @@ export function useBlogGenerator() {
     }
 
     const result = await mutate(
-      () => axios.post('/api/blog/generate', { prompt }),
+      () => axios.post(API_ENDPOINTS.BLOG_GENERATE, { prompt }),
       {
         successMessage: 'Content generated successfully!',
         errorMessage: MESSAGES.ERROR_GENERIC,

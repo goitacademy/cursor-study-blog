@@ -114,4 +114,3 @@ print('✅ Database ${MONGO_INITDB_DATABASE} initialized successfully');
 "
 
 echo "✅ Database initialization complete"
-

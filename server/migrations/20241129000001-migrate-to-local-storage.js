@@ -96,7 +96,7 @@ export async function up(db) {
   }
 }
 
-export async function down(db) {
+export async function down(_db) {
   try {
     dbLogger.logMigration('20241129000001-migrate-to-local-storage', 'ROLLING_BACK', 'Note: Cannot restore original external URLs')
 

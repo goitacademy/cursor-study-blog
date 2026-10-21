@@ -1,6 +1,7 @@
 import { useAppContext } from '../../../context/AppContext'
 import { useApiMutation } from '../../core'
 import { MESSAGES } from '../../../constants/messages'
+import { API_ENDPOINTS } from '../../../constants/apiEndpoints'
 
 export function useCreateBlog() {
   const { axios } = useAppContext()
@@ -36,7 +37,7 @@ export function useCreateBlog() {
     }
 
     return mutate(
-      () => axios.post('/api/blog/add', formData),
+      () => axios.post(API_ENDPOINTS.BLOG_CREATE, formData),
       {
         successMessage: MESSAGES.SUCCESS_BLOG_CREATED,
         errorMessage: MESSAGES.ERROR_CREATE_BLOG

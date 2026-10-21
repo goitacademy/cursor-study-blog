@@ -68,7 +68,7 @@ npm run server
 MONGODB_USER=studysprint
 MONGODB_PASSWORD=studysprint123
 MONGODB_DATABASE=studysprint
-MONGODB_URI=mongodb://studysprint:studysprint123@localhost:27017/studysprint
+MONGODB_URI=mongodb://studysprint:studysprint123@localhost:27017/studysprint?authSource=admin
 
 # Server
 PORT=5001
@@ -176,7 +176,9 @@ Professional desktop application:
   - `blog` (JSON string: `{ title, subTitle, description, category, isPublished }`)
   - `image` (file)
 - `POST /api/blog/delete` — body: `{ id }`
-- `POST /api/blog/toggle-publish` — body: `{ id }`
+- `POST /api/blog/publish` — body: `{ id }`
+- `POST /api/blog/unpublish` — body: `{ id }`
+- `POST /api/admin/unapprove-comment` — body: `{ id }`
 - `POST /api/blog/generate` — body: `{ prompt }` → AI-generated HTML content
 
 ### Static Files

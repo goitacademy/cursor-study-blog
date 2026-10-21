@@ -1,5 +1,5 @@
 // 404 handler - catches unmatched routes
-export const notFound = (req, res, next) => {
+export const notFound = (req, res, _next) => {
   res.status(404).json({
     success: false,
     message: `Route not found: ${req.method} ${req.originalUrl}`
@@ -7,7 +7,7 @@ export const notFound = (req, res, next) => {
 }
 
 // Global error handler
-export const errorHandler = (err, req, res, next) => {
+export const errorHandler = (err, req, res, _next) => {
   console.error('Error:', err)
 
   const statusCode = err.statusCode || 500

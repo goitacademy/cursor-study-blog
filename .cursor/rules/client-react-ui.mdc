@@ -1,0 +1,11 @@
+---
+description: UI details that differ from Ant Design defaults
+globs: client/**/*.{js,jsx}
+alwaysApply: false
+---
+
+# Client UI
+
+- New user-visible copy goes through `useTranslation` (`client/src/i18n/`), not hardcoded English.
+- Ant Design v6 `Space`: prop is `orientation`, not `direction`.
+- Public blog HTML must be sanitized with DOMPurify before render.

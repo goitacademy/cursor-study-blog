@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useAppContext } from '../../../context/AppContext'
 import { useApiMutation } from '../../core'
 import { MESSAGES } from '../../../constants/messages'
+import { API_ENDPOINTS } from '../../../constants/apiEndpoints'
 
 export function useBlogActions() {
   const [isDeleting, setIsDeleting] = useState(false)
@@ -13,7 +14,7 @@ export function useBlogActions() {
     setIsDeleting(true)
     
     const result = await mutate(
-      () => axios.post('/api/blog/delete', { id: blogId }),
+      () => axios.post(API_ENDPOINTS.BLOG_DELETE, { id: blogId }),
       {
         confirmMessage: 'Are you sure you want to delete this blog?',
         successMessage: MESSAGES.SUCCESS_BLOG_DELETED,
@@ -29,7 +30,7 @@ export function useBlogActions() {
     setIsPublishing(true)
     
     const result = await mutate(
-      () => axios.post('/api/blog/publish', { id: blogId }),
+      () => axios.post(API_ENDPOINTS.BLOG_PUBLISH, { id: blogId }),
       {
         successMessage: 'Blog published successfully',
         errorMessage: MESSAGES.ERROR_UPDATE_BLOG
@@ -44,7 +45,7 @@ export function useBlogActions() {
     setIsPublishing(true)
     
     const result = await mutate(
-      () => axios.post('/api/blog/unpublish', { id: blogId }),
+      () => axios.post(API_ENDPOINTS.BLOG_UNPUBLISH, { id: blogId }),
       {
         successMessage: 'Blog unpublished successfully',
         errorMessage: MESSAGES.ERROR_UPDATE_BLOG
